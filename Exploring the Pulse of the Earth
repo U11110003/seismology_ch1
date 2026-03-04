@@ -1,0 +1,126 @@
+# seismology_ch1
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地震學第一章：探索地球的脈動</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .wave-p { animation: compress 0.5s infinite alternate; }
+        @keyframes compress { from { transform: translateX(-5px); } to { transform: translateX(5px); } }
+        .wave-s { animation: shear 0.6s infinite alternate; }
+        @keyframes shear { from { transform: translateY(-10px); } to { transform: translateY(10px); } }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans">
+    <div class="max-w-4xl mx-auto p-6">
+        <header class="text-center py-10">
+            <h1 class="text-4xl font-bold text-blue-400 mb-2">地震學第一章：探索地球的脈動</h1>
+            <p class="text-slate-400">專業、直觀、深度探索地球內部的秘密</p>
+        </header>
+
+        <nav class="flex flex-wrap gap-2 mb-8 justify-center">
+            <button onclick="showTab('basics')" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded shadow-lg transition">基礎概念</button>
+            <button onclick="showTab('waves')" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded shadow-lg transition">震波與結構</button>
+            <button onclick="showTab('source')" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded shadow-lg transition">震源參數</button>
+            <button onclick="showTab('hazard')" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded shadow-lg transition">災害工程</button>
+        </nav>
+
+        <section id="basics" class="tab-content active bg-slate-800 p-8 rounded-xl shadow-2xl border border-slate-700">
+            <h2 class="text-2xl font-semibold mb-4 text-blue-300">1. 地震學的三大支柱</h2>
+            <p class="mb-4 text-slate-300">地震學的研究包含三個要素：<b>震源 (Source)</b>、<b>介質 (Medium)</b> 與 <b>接收器 (Receiver)</b>。這就像你在山谷喊叫，你的喉嚨是震源，空氣是介質，耳朵是接收器。</p>
+            
+            <div class="bg-slate-900 p-4 rounded-lg flex justify-center mb-6">
+                <svg width="300" height="100" viewBox="0 0 300 100">
+                    <circle cx="30" cy="50" r="10" fill="#f87171">
+                        <animate attributeName="r" values="10;15;10" dur="1s" repeatCount="indefinite" />
+                    </circle>
+                    <path d="M50 50 Q 150 20 250 50" stroke="#60a5fa" fill="transparent" stroke-dasharray="5,5">
+                        <animate attributeName="stroke-dashoffset" from="100" to="0" dur="2s" repeatCount="indefinite" />
+                    </path>
+                    <rect x="260" y="40" width="20" height="20" fill="#4ade80" />
+                    <text x="20" y="85" fill="white" font-size="12">震源</text>
+                    <text x="130" y="20" fill="white" font-size="12">介質 (波)</text>
+                    <text x="245" y="85" fill="white" font-size="12">接收器</text>
+                </svg>
+            </div>
+
+            <div class="mt-4 border-t border-slate-700 pt-4">
+                <button onclick="toggleQuiz('q1')" class="bg-amber-600 px-4 py-2 rounded text-sm">自我檢測</button>
+                <div id="q1" class="hidden mt-4 p-4 bg-slate-700 rounded text-sm">
+                    <p class="font-bold">問：地震圖 (Seismogram) 主要包含哪兩類核心資訊？</p>
+                    <p class="text-blue-200 mt-2">答：震源資訊（如發生位置）與介質資訊（如地下構造）。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="waves" class="tab-content bg-slate-800 p-8 rounded-xl shadow-2xl border border-slate-700">
+            <h2 class="text-2xl font-semibold mb-4 text-blue-300">2. 體波 P 與 S 的差異</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-slate-900 p-4 rounded text-center">
+                    <p class="text-blue-400 font-bold mb-2">P 波 (縱波)</p>
+                    <div class="flex justify-center gap-1">
+                        <div class="w-4 h-16 bg-blue-500 wave-p"></div>
+                        <div class="w-4 h-16 bg-blue-500 wave-p"></div>
+                        <div class="w-4 h-16 bg-blue-500 wave-p"></div>
+                    </div>
+                    <p class="text-xs mt-4 text-slate-400">壓縮運動，速度最快</p>
+                </div>
+                <div class="bg-slate-900 p-4 rounded text-center">
+                    <p class="text-red-400 font-bold mb-2">S 波 (橫波)</p>
+                    <div class="flex justify-center gap-2">
+                        <div class="w-2 h-16 bg-red-500 wave-s"></div>
+                        <div class="w-2 h-16 bg-red-500 wave-s" style="animation-delay: 0.1s"></div>
+                        <div class="w-2 h-16 bg-red-500 wave-s" style="animation-delay: 0.2s"></div>
+                    </div>
+                    <p class="text-xs mt-4 text-slate-400">剪切運動，無法穿過液體地核</p>
+                </div>
+            </div>
+            
+            <div class="mt-6 border-t border-slate-700 pt-4">
+                <button onclick="toggleQuiz('q2')" class="bg-amber-600 px-4 py-2 rounded text-sm">自我檢測</button>
+                <div id="q2" class="hidden mt-4 p-4 bg-slate-700 rounded text-sm">
+                    <p class="font-bold">問：若震相名稱為 ScS，代表什麼路徑？</p>
+                    <p class="text-blue-200 mt-2">答：S 波從震源向下傳播，碰到地核邊界 (c) 反射，再以 S 波形式回到地表。這證實了外核與地函的明顯邊界。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="hazard" class="tab-content bg-slate-800 p-8 rounded-xl shadow-2xl border border-slate-700">
+            <h2 class="text-2xl font-semibold mb-4 text-blue-300">3. 場址效應與共振</h2>
+            <p class="text-slate-300 mb-4">為什麼在盆地（如台北盆地）地震時搖晃特別劇烈？這就是「場址效應」。</p>
+            <div class="bg-slate-900 p-4 rounded mb-4">
+                <svg width="300" height="80" viewBox="0 0 300 80">
+                    <path d="M0 60 L100 60 Q150 75 200 60 L300 60" stroke="#8b5cf6" fill="none" stroke-width="3" />
+                    <text x="120" y="50" fill="#a78bfa" font-size="10">軟弱沉積層 (放大震波)</text>
+                </svg>
+            </div>
+             <div class="mt-4 border-t border-slate-700 pt-4">
+                <button onclick="toggleQuiz('q3')" class="bg-amber-600 px-4 py-2 rounded text-sm">自我檢測</button>
+                <div id="q3" class="hidden mt-4 p-4 bg-slate-700 rounded text-sm">
+                    <p class="font-bold">問：地震預警系統 (EEW) 利用什麼原理爭取時間？</p>
+                    <p class="text-blue-200 mt-2">答：利用 P 波與 S 波的速度差。P 波跑得快但破壞小，接收到 P 波後在破壞力強的 S 波到達前發出警報。</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="mt-10 text-center text-slate-500 text-sm italic">
+            "地球是一個動態的實驗室，而地震波就是它寄給我們的信件。"
+        </footer>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+        }
+        function toggleQuiz(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
