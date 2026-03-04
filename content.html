@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地震學導論：原理、社會影響與監測</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            scroll-behavior: smooth;
+        }
+        .text-primary { color: #1e3a8a; }
+        .bg-primary { background-color: #1e3a8a; }
+        .bg-secondary { background-color: #334155; }
+        
+        /* 側邊欄捲軸美化 */
+        .sidebar-scroll::-webkit-scrollbar { width: 6px; }
+        .sidebar-scroll::-webkit-scrollbar-track { background: #1e293b; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        
+        /* 卡片懸浮動畫 */
+        .hover-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .hover-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        
+        /* 淡入動畫 */
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- 手機版導覽列按鈕 -->
+    <button id="mobile-menu-btn" class="md:hidden fixed top-4 right-4 z-50 bg-primary text-white p-3 rounded-full shadow-lg">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- 左側目錄欄 -->
+    <aside id="sidebar" class="bg-slate-900 text-slate-300 w-72 flex-shrink-0 h-full flex flex-col transition-transform duration-300 absolute md:relative z-40 transform -translate-x-full md:translate-x-0">
+        <div class="p-6 bg-slate-950 border-b border-slate-800">
+            <h1 class="text-xl font-bold text-white"><i class="fas fa-globe-americas mr-2"></i>地震學知識庫</h1>
+            <p class="text-sm text-slate-400 mt-2">第一章：導論與社會影響</p>
+        </div>
+        <nav class="flex-1 overflow-y-auto sidebar-scroll p-4 space-y-1" id="nav-menu">
+            <!-- JavaScript 將在此動態生成目錄 -->
+        </nav>
+        <div class="p-4 bg-slate-950 border-t border-slate-800">
+            <button onclick="showQuiz()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded transition">
+                <i class="fas fa-pencil-alt mr-2"></i>開始單元測驗
+            </button>
+        </div>
+    </aside>
+
+    <!-- 右側主要內容區 -->
+    <main class="flex-1 overflow-y-auto h-full bg-slate-50 relative" id="main-content">
+        <div class="max-w-4xl mx-auto p-6 md:p-10 pb-24" id="content-container">
+            <!-- JavaScript 將在此動態生成內容 -->
+            <div class="text-center mt-20 fade-in">
+                <i class="fas fa-book-reader text-6xl text-slate-300 mb-4"></i>
+                <h2 class="text-2xl font-bold text-slate-600">歡迎來到地震學大師講堂</h2>
+                <p class="text-slate-500 mt-2">請從左側目錄選擇章節開始學習，或直接進行測驗檢視實力。</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript 邏輯與資料 -->
+    <script>
+        // 知識點資料庫 (依據上傳之 PDF 與提示設計)
+        const chapters = [
+            {
+                id: 'ch1',
+                title: '一、 地震學基礎定義',
+                quote: "This book is an introduction to seismology, the study of elastic waves or sound waves in the solid earth... Seismic waves are generated at a source... propagate through the medium... and are recorded at a receiver.",
+                explanation: "【白話說明】地震學就是研究「彈性波（或聲波）」在固體地球內部傳遞的科學。你可以把地球想像成一個巨大的果凍，當某處發生破裂（震源），震動的波紋會穿過果凍（介質），最後被我們的儀器（接收器/地震儀）記錄下來。這就是地震實驗的三個核心元素。",
+                icon: 'fa-wave-square',
+                svg: `<svg viewBox="0 0 400 200" class="w-full h-48 bg-slate-100 rounded-lg"><circle cx="100" cy="100" r="10" fill="#ef4444"/><text x="90" y="130" class="text-sm">震源 (Source)</text><path d="M120,100 Q200,50 280,100" fill="none" stroke="#3b82f6" stroke-width="2" stroke-dasharray="5,5"/><text x="180" y="70" class="text-sm fill-blue-600">介質傳遞</text><rect x="290" y="85" width="30" height="30" fill="#10b981"/><text x="270" y="130" class="text-sm">接收器 (Receiver)</text></svg>`
+            },
+            {
+                id: 'ch2',
+                title: '二、 地震圖的資訊解讀',
+                quote: "A seismogram, the record of the motion of the ground at a receiver called a seismometer, thus contains information about both the source and the medium.",
+                explanation: "【白話說明】地震圖（Seismogram）是地面運動的紀錄軌跡。它就像是地球的「心電圖」，裡面藏著兩個重要秘密：一是「心臟」（震源）在哪裡、有多強；二是波傳遞過來的「血管」（介質/地球內部）狀態如何（例如哪裡是液體、哪裡密度高）。",
+                icon: 'fa-chart-line'
+            },
+            {
+                id: 'ch3',
+                title: '三、 地震學的多元應用',
+                quote: "The waves provide information on the location and nature of the source... to study the interior of the earth. ... resource exploration (oil and minerals) ... study tectonic history.",
+                explanation: "【白話說明】地震學不只用來研究地震！它的應用非常廣泛：<br>1. <b>探查地球內部構造</b>：像X光一樣了解地殼、地函與地核。<br>2. <b>資源勘探</b>：尋找地底下的石油或礦產。<br>3. <b>板塊構造學</b>：研究地球幾十億年來的地函對流與板塊運動歷史。",
+                icon: 'fa-globe'
+            },
+            {
+                id: 'ch4',
+                title: '四、 基本波物理現象',
+                quote: "Refraction: velocity increases with depth, causing the path to bend horizontally... Reflection: at interfaces with changing physical properties (e.g. core-mantle boundary)... Diffraction: waves bend around obstacles.",
+                explanation: "【白話說明】地震波在地球裡傳遞時會遇到三種現象：<br>1. <b>折射 (Refraction)</b>：越往深處波速越快，所以波前進的路線會彎曲，最後回到地表。<br>2. <b>反射 (Reflection)</b>：撞到不同物質的邊界（如地函跟地核的交界）時反彈。<br>3. <b>繞射 (Diffraction)</b>：波遇到障礙物（像地核邊緣）時，會稍微轉彎繞過去。",
+                icon: 'fa-water'
+            },
+            {
+                id: 'ch5',
+                title: '五、 地震模型與科學方法',
+                quote: "Forward problems: use theory to predict seismograms. Inverse problems: infer source and medium properties from seismograms, usually non-unique. Uncertainty is divided into Aleatory and Epistemic.",
+                explanation: "【白話說明】科學家處理地震資料有兩個方向：<br><b>正演 (Forward)</b>：已知地球長怎樣，去猜測地震圖會畫出什麼波形。<br><b>反演 (Inverse)</b>：看著現成的地震圖，去回推地球內部到底長怎樣（這通常很難，因為可能有很多種答案）。<br>另外，我們評估誤差時分為：<b>隨機不確定性</b>（儀器本身的隨機誤差）與<b>系統/認識不確定性</b>（我們選錯了理論模型造成的誤差）。",
+                icon: 'fa-project-diagram'
+            },
+            {
+                id: 'ch6',
+                title: '六、 板塊構造學說的歷史革命',
+                quote: "The classic geological example of advancing beyond conventional thinking is the plate tectonic revolution of the late 1960s. ... Alfred Wegener in 1915...",
+                explanation: "【白話說明】1915年，韋格納提出「大陸漂移說」，但當時的科學界（包含地震學權威）覺得這不可能發生，因為缺乏動力機制。直到1960年代，透過地震分布與海底擴張的證據，科學界才發生了思想大革命，接受了我們現在熟知的「板塊構造學說」。這展示了科學是不斷推翻舊思維的過程。",
+                icon: 'fa-layer-group'
+            },
+            {
+                id: 'ch7',
+                title: '七、 地震與社會：危害與風險',
+                quote: "Hazard refers to the natural phenomenon itself, while Risk includes the economic and social consequences. Earthquake engineering plays a key role in mitigation.",
+                explanation: "【白話說明】我們必須區分兩個觀念：<br><b>危害 (Hazard)</b>：指的是大自然發生的斷層錯動、地表震動等客觀自然現象。<br><b>風險 (Risk)</b>：是指這些現象對人類社會造成的生命財產損失。<br>在沙漠發生大地震，危害很大但風險很小；在城市發生中型地震，風險卻極高。這就是為什麼「地震工程（建築防震）」在減災中扮演關鍵角色。",
+                icon: 'fa-house-damage'
+            },
+            {
+                id: 'ch8',
+                title: '八、 地震預測的挑戰與爭論',
+                quote: "Earthquake prediction is highly debated. Critics argue the program is scientifically weak... and gives the public the misleading impression that earthquakes can currently be predicted.",
+                explanation: "【白話說明】目前科學界對「地震能否被精確預測」存在巨大爭議。許多地震學家認為，現今的科技無法準確預測地震發生的時間、地點與規模。過度宣傳預測可能會讓大眾產生錯誤的安全感或恐慌，因此風險溝通是非常困難的挑戰。",
+                icon: 'fa-exclamation-triangle'
+            },
+            {
+                id: 'ch9',
+                title: '九、 核武試爆監測與地震學',
+                quote: "Because the P waves of explosions are very large... they have anomalously high mb values for a given source energy. A comparison of mb and Ms can thus discriminate between earthquakes and nuclear explosions.",
+                explanation: "【白話說明】地震學也是維持世界和平的武器！地下核爆跟天然地震的波形不一樣。核彈爆炸的能量非常集中，會產生極大的「體波 (P波)」，但「表面波」相對較小。所以科學家透過計算體波規模 (mb) 與表面波規模 (Ms) 的比例，就能抓出誰在偷偷進行地下核試爆。",
+                icon: 'fa-bomb'
+            },
+            {
+                id: 'ch10',
+                title: '十、 國際監測系統 (IMS)',
+                quote: "International Monitoring System (IMS)... combine seismological, hydroacoustic, and infrasound networks. Underwater nuclear tests create sound waves... atmospheric tests generate infrasonic waves.",
+                explanation: "【白話說明】為了落實《全面禁止核試驗條約 (CTBT)》，國際社會建立了 IMS 網路。這是一個天羅地網的系統，包含四種武器：<br>1. <b>地震觀測網</b>：抓地下核爆。<br>2. <b>水下聲響系統</b>：抓海中核爆。<br>3. <b>低頻聲波 (Infrasound)</b>：聽取大氣層中人類聽不到的爆炸低音波。<br>4. <b>放射性核種觀測</b>：偵測空氣中的輻射微粒。",
+                icon: 'fa-satellite-dish'
+            }
+        ];
+
+        // 測驗題庫 (20題，涵蓋所有章節)
+        const quizQuestions = [
+            { q: "地震學主要研究的是固體地球中的哪一種現象？", options: ["電磁波傳遞", "彈性波或聲波", "重力波干涉", "熱輻射"], ans: 1, ch: 0 },
+            { q: "下列何者不屬於地震實驗的三個基本組成元素？", options: ["大氣", "震源", "接收器", "介質"], ans: 0, ch: 0 },
+            { q: "地震圖 (Seismogram) 最主要的功能是記錄什麼？", options: ["大氣壓力變化", "地球磁場波動", "地面運動的資料", "地核溫度"], ans: 2, ch: 1 },
+            { q: "我們無法從地震圖的紀錄中，直接提取出哪一項資訊？", options: ["震源的位置", "介質的物理性質", "未來一週的降雨量", "地震波的速度結構"], ans: 2, ch: 1 },
+            { q: "在資源勘探中，地震學最常被用來尋找什麼？", options: ["外星隕石", "石油與礦產", "地下乾淨空氣", "琥珀化石"], ans: 1, ch: 2 },
+            { q: "地震學對於研究地球幾十億年來的演化，主要貢獻在於證明了什麼歷史？", options: ["生物演化史", "板塊構造與地函對流的動力歷史", "太陽系形成史", "海洋鹽度變化史"], ans: 1, ch: 2 },
+            { q: "當地震波速度隨深度增加時，波的路徑向水平方向彎曲並返回地表的現象稱為？", options: ["繞射", "折射", "散射", "直射"], ans: 1, ch: 3 },
+            { q: "地震波遇到地核這類巨大障礙物時，波會彎曲繞過去的現象稱為？", options: ["反射", "吸收", "繞射", "極化"], ans: 2, ch: 3 },
+            { q: "「利用既有理論去預測地震圖的樣貌」屬於哪一種科學問題？", options: ["正演 (Forward) 問題", "反演 (Inverse) 問題", "社會科學問題", "哲學問題"], ans: 0, ch: 4 },
+            { q: "因為「選錯科學模型」而造成的地震數據不確定性，在分類上屬於？", options: ["隨機不確定性", "系統（認識）不確定性", "人為記錄遺失", "絕對不確定性"], ans: 1, ch: 4 },
+            { q: "1915年提出「大陸漂移說」的科學家是誰？", options: ["愛因斯坦", "韋格納 (Alfred Wegener)", "牛頓", "居禮夫人"], ans: 1, ch: 5 },
+            { q: "板塊構造學說大約在何時才引發革命並被科學社群廣泛接受？", options: ["1890年代", "1920年代", "1960年代", "2000年代"], ans: 2, ch: 5 },
+            { q: "在地震學與社會的討論中，「地震風險 (Risk)」的定義主要側重於？", options: ["自然界的斷層長度", "對人類社會造成的經濟與生命損失", "地震波的頻率", "岩石破裂的物理機制"], ans: 1, ch: 6 },
+            { q: "為了減輕地震風險，現代社會最主要依賴下列哪一種專業領域的角色？", options: ["占星學", "地震工程", "氣象學", "海洋生物學"], ans: 1, ch: 6 },
+            { q: "目前科學界對於「精準預測地震時間與地點」的共識為何？", options: ["已經可以提前一週精準預測", "存在極大爭議且目前被認為無法精準預測", "只要超級電腦夠快就能 100% 預測", "只有特定國家擁有預測技術"], ans: 1, ch: 7 },
+            { q: "向社會大眾發布不準確的地震預測，最可能造成的負面影響是？", options: ["導致地球自轉減慢", "給予公眾錯誤的安全感或引發不必要的恐慌", "增加地下石油蘊藏量", "改變斷層的走向"], ans: 1, ch: 7 },
+            { q: "用來區分「自然地震」與「地下核試爆」的一項關鍵技術指標是比較什麼？", options: ["震央所在國家的政治體制", "體波規模(mb)與表面波規模(Ms)的比例", "地震發生的季節", "當地是否有火山"], ans: 1, ch: 8 },
+            { q: "地下核爆的特徵通常是？", options: ["P波極小，表面波極大", "完全不產生P波", "P波異常大，使得 mb 數值偏高", "只產生S波"], ans: 2, ch: 8 },
+            { q: "國際監測系統 (IMS) 的主要目的是為了監督哪一項國際條約的執行？", options: ["京都議定書", "全面禁止核試驗條約 (CTBT)", "巴黎氣候協定", "聯合國海洋法公約"], ans: 1, ch: 9 },
+            { q: "IMS 用來偵測大氣層中核爆的主要觀測工具是？", options: ["水下聲響系統", "地震觀測網", "低頻聲波 (Infrasound) 監測", "雷射測距儀"], ans: 2, ch: 9 }
+        ];
+
+        // 初始化介面
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSidebar();
+            
+            // 手機版側邊欄開關
+            const btn = document.getElementById('mobile-menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            btn.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
+        });
+
+        function renderSidebar() {
+            const nav = document.getElementById('nav-menu');
+            nav.innerHTML = '';
+            chapters.forEach((ch, index) => {
+                const link = document.createElement('a');
+                link.href = `#`;
+                link.className = 'block px-4 py-3 rounded text-slate-300 hover:bg-slate-800 hover:text-white transition';
+                link.innerHTML = `<i class="fas ${ch.icon} w-6 text-center mr-2 text-slate-500"></i><span class="text-sm">${ch.title}</span>`;
+                link.onclick = (e) => {
+                    e.preventDefault();
+                    showContent(index);
+                    if(window.innerWidth < 768) {
+                        document.getElementById('sidebar').classList.add('-translate-x-full');
+                    }
+                };
+                nav.appendChild(link);
+            });
+        }
+
+        function showContent(index) {
+            const ch = chapters[index];
+            const container = document.getElementById('content-container');
+            
+            let svgContent = ch.svg ? `<div class="mt-6 mb-6 flex justify-center">${ch.svg}</div>` : 
+                `<div class="mt-6 mb-6 flex items-center justify-center bg-slate-200 h-48 rounded-lg border-2 border-dashed border-slate-300">
+                    <span class="text-slate-500"><i class="fas fa-image mr-2"></i></span>
+                </div>`;
+
+            container.innerHTML = `
+                <div class="fade-in bg-white rounded-xl shadow-lg p-8 border-t-4 border-blue-600 hover-card">
+                    <div class="flex items-center mb-4 text-blue-600">
+                        <i class="fas ${ch.icon} text-3xl mr-4"></i>
+                        <h2 class="text-2xl font-bold">${ch.title}</h2>
+                    </div>
+                    
+                    <div class="bg-slate-50 border-l-4 border-slate-400 p-4 rounded-r-lg mb-6">
+                        <h3 class="text-sm font-bold text-slate-500 mb-1 uppercase tracking-wider"><i class="fas fa-quote-left mr-2"></i>Textbook Excerpt</h3>
+                        <p class="text-slate-700 font-serif italic">"${ch.quote}"</p>
+                    </div>
+
+                    <div class="prose max-w-none text-slate-700 leading-relaxed space-y-4">
+                        <p class="text-lg">${ch.explanation}</p>
+                    </div>
+                    
+                    ${svgContent}
+                    
+                    <div class="mt-8 flex justify-between border-t pt-4">
+                        ${index > 0 ? `<button onclick="showContent(${index-1})" class="text-slate-500 hover:text-blue-600"><i class="fas fa-arrow-left mr-1"></i> 上一節</button>` : '<div></div>'}
+                        ${index < chapters.length - 1 ? `<button onclick="showContent(${index+1})" class="text-slate-500 hover:text-blue-600">下一節 <i class="fas fa-arrow-right ml-1"></i></button>` : `<button onclick="showQuiz()" class="text-blue-600 font-bold hover:text-blue-800">前往單元測驗 <i class="fas fa-flag-checkered ml-1"></i></button>`}
+                    </div>
+                </div>
+            `;
+            container.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showQuiz() {
+            const container = document.getElementById('content-container');
+            let quizHTML = `
+                <div class="fade-in bg-white rounded-xl shadow-lg p-8 border-t-4 border-green-500">
+                    <h2 class="text-2xl font-bold text-slate-800 mb-6"><i class="fas fa-tasks text-green-500 mr-2"></i>第一章 單元測驗</h2>
+                    <p class="text-slate-600 mb-8">請回答下列 20 題選擇題，測驗結束後將自動進行弱點分析。</p>
+                    <form id="quiz-form">
+            `;
+
+            quizQuestions.forEach((q, idx) => {
+                quizHTML += `
+                    <div class="mb-8 p-4 bg-slate-50 rounded-lg border border-slate-100 question-block">
+                        <p class="font-bold text-slate-700 mb-3">${idx + 1}. ${q.q}</p>
+                        <div class="space-y-2">
+                `;
+                q.options.forEach((opt, oIdx) => {
+                    quizHTML += `
+                            <label class="flex items-center p-3 rounded bg-white border border-slate-200 cursor-pointer hover:bg-blue-50 transition">
+                                <input type="radio" name="q${idx}" value="${oIdx}" class="mr-3 text-blue-600 focus:ring-blue-500">
+                                <span>${opt}</span>
+                            </label>
+                    `;
+                });
+                quizHTML += `
+                        </div>
+                        <div id="feedback-${idx}" class="mt-3 hidden text-sm font-bold p-3 rounded"></div>
+                    </div>
+                `;
+            });
+
+            quizHTML += `
+                    <button type="button" onclick="gradeQuiz()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-4 rounded-lg shadow transition text-lg">
+                        交卷評分
+                    </button>
+                    </form>
+                    <div id="quiz-results" class="mt-8 hidden"></div>
+                </div>
+            `;
+            container.innerHTML = quizHTML;
+            if(window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+            }
+        }
+
+        function gradeQuiz() {
+            let score = 0;
+            let wrongChapters = new Set();
+            const form = document.getElementById('quiz-form');
+
+            quizQuestions.forEach((q, idx) => {
+                const selected = form.querySelector(`input[name="q${idx}"]:checked`);
+                const feedbackDiv = document.getElementById(`feedback-${idx}`);
+                feedbackDiv.classList.remove('hidden');
+
+                if (selected) {
+                    const ans = parseInt(selected.value);
+                    if (ans === q.ans) {
+                        score += 5; // 20題共100分
+                        feedbackDiv.innerHTML = `<i class="fas fa-check-circle mr-1"></i> 答對了！`;
+                        feedbackDiv.className = "mt-3 text-sm font-bold p-3 rounded bg-green-100 text-green-700";
+                    } else {
+                        wrongChapters.add(q.ch);
+                        feedbackDiv.innerHTML = `<i class="fas fa-times-circle mr-1"></i> 答錯了。正確答案為：${q.options[q.ans]}<br><span class="text-xs font-normal mt-1 block">請複習：${chapters[q.ch].title}</span>`;
+                        feedbackDiv.className = "mt-3 text-sm font-bold p-3 rounded bg-red-100 text-red-700";
+                    }
+                } else {
+                    wrongChapters.add(q.ch);
+                    feedbackDiv.innerHTML = `<i class="fas fa-exclamation-triangle mr-1"></i> 未作答。正確答案為：${q.options[q.ans]}`;
+                    feedbackDiv.className = "mt-3 text-sm font-bold p-3 rounded bg-orange-100 text-orange-700";
+                }
+            });
+
+            // 產生分析報告
+            const resultsDiv = document.getElementById('quiz-results');
+            resultsDiv.classList.remove('hidden');
+            resultsDiv.classList.add('fade-in');
+            
+            let weakAnalysis = "";
+            if (wrongChapters.size === 0) {
+                weakAnalysis = "<p class='text-green-600 font-bold'>太棒了！您對第一章的概念已經完全掌握！</p>";
+            } else {
+                weakAnalysis = "<p class='text-slate-700 mb-2'>建議您重新複習以下弱點單元：</p><ul class='list-disc pl-5 space-y-1'>";
+                wrongChapters.forEach(chIdx => {
+                    weakAnalysis += `<li><a href="#" onclick="showContent(${chIdx}); return false;" class="text-blue-600 hover:underline">${chapters[chIdx].title}</a></li>`;
+                });
+                weakAnalysis += "</ul>";
+            }
+
+            resultsDiv.innerHTML = `
+                <div class="bg-slate-800 text-white rounded-lg p-6 text-center shadow-inner">
+                    <h3 class="text-xl font-bold mb-2">測驗結果</h3>
+                    <div class="text-5xl font-black ${score >= 60 ? 'text-green-400' : 'text-red-400'} mb-4">${score} <span class="text-lg text-slate-400">/ 100 分</span></div>
+                    <div class="text-sm text-slate-300">
+                        答對：${score/5} 題 | 答錯/未答：${20 - score/5} 題
+                    </div>
+                </div>
+                <div class="mt-6 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r">
+                    <h4 class="font-bold text-blue-800 mb-2"><i class="fas fa-chart-pie mr-2"></i>學習弱點分析與建議</h4>
+                    ${weakAnalysis}
+                </div>
+                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="mt-6 w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-4 rounded transition">
+                    回到測驗頂部查看解析
+                </button>
+            `;
+            
+            // 捲動至結果區
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    </script>
+</body>
+</html>
