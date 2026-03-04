@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地震學第一章：導論與社會應用互動教學網</title>
+    <style>
+        :root {
+            --sidebar-width: 280px;
+            --primary-blue: #1a2a6c;
+            --secondary-gray: #2c3e50;
+            --accent-gold: #fdbb2d;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        * { box-sizing: border-box; scroll-behavior: smooth; }
+        body {
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            margin: 0;
+            display: flex;
+            background-color: var(--light-bg);
+            color: #333;
+        }
+
+        /* 側邊導覽欄 */
+        nav {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background-color: var(--primary-blue);
+            color: white;
+            position: fixed;
+            overflow-y: auto;
+            padding: 20px 0;
+        }
+        nav h2 { padding: 0 20px; font-size: 1.2rem; color: var(--accent-gold); }
+        nav ul { list-style: none; padding: 0; }
+        nav ul li a {
+            display: block;
+            padding: 12px 20px;
+            color: #bdc3c7;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: 0.3s;
+            border-left: 4px solid transparent;
+        }
+        nav ul li a:hover, nav ul li a.active {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        /* 主要內容區 */
+        main {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 40px;
+            max-width: 1000px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-gray));
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: var(--card-shadow);
+        }
+
+        section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: var(--card-shadow);
+            border-top: 5px solid var(--primary-blue);
+        }
+
+        h1 { margin: 0; font-size: 2.2rem; }
+        h2 { color: var(--primary-blue); margin-top: 0; }
+        h3 { color: var(--secondary-gray); border-left: 4px solid var(--accent-gold); padding-left: 10px; }
+
+        /* 教科書元素 */
+        .quote {
+            background: #f1f4f9;
+            border-left: 5px solid #3498db;
+            padding: 15px 20px;
+            margin: 20px 0;
+            font-style: italic;
+            font-size: 0.95rem;
+            color: #2980b9;
+        }
+        .plain-talk {
+            background: #fff9e6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px dashed var(--accent-gold);
+        }
+        .plain-talk::before { content: "💡 白話筆記："; font-weight: bold; color: #d35400; }
+
+        .img-box {
+            background: #eee;
+            width: 100%;
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 2px dashed #ccc;
+            color: #777;
+        }
+
+        /* 測驗區塊 */
+        .quiz-container { background: #eef2f3; padding: 30px; border-radius: 12px; }
+        .question { margin-bottom: 25px; padding: 15px; background: white; border-radius: 8px; }
+        .options label { display: block; padding: 8px; cursor: pointer; border-radius: 4px; }
+        .options label:hover { background: #f0f0f0; }
+        button#submit-btn {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+        button#submit-btn:hover { background: #001a4d; }
+
+        #result-area { display: none; margin-top: 30px; padding: 20px; border-radius: 8px; }
+
+        @media (max-width: 768px) {
+            nav { width: 0; display: none; }
+            main { margin-left: 0; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <h2>第一章 知識導覽</h2>
+    <ul>
+        <li><a href="#sec1">1. 地震學基礎定義</a></li>
+        <li><a href="#sec2">2. 地震圖資訊解讀</a></li>
+        <li><a href="#sec3">3. 地震學多元應用</a></li>
+        <li><a href="#sec4">4. 基本波物理現象</a></li>
+        <li><a href="#sec5">5. 地震模型與科學方法</a></li>
+        <li><a href="#sec6">6. 板塊學說歷史革命</a></li>
+        <li><a href="#sec7">7. 地震危害與風險</a></li>
+        <li><a href="#sec8">8. 地震預測挑戰</a></li>
+        <li><a href="#sec9">9. 核武監測與地震技術</a></li>
+        <li><a href="#sec10">10. 國際監測系統 (IMS)</a></li>
+        <li><a href="#quiz">📘 單元測驗</a></li>
+    </ul>
+</nav>
+
+<main>
+    <header>
+        <h1>地震學：原理、社會影響與監測</h1>
+        <p>大師級解析：第一章 教學輔助網頁</p>
+    </header>
+
+    <section id="sec1">
+        <h2>一、地震學基礎定義</h2>
+        <h3>1. 研究對象</h3>
+        <div class="quote">「地震學是研究固體地球中彈性波或聲波的科學。」 (Seismology is the study of elastic waves or sound waves in the solid earth.)</div>
+        <div class="plain-talk">地震學不只是研究「地震」，而是研究所有在地球內跑動的「彈性波」，就像醫生用超音波檢查身體一樣。</div>
+        
+        <h3>2. 實驗三元素</h3>
+        <div class="img-box">
+            <svg width="200" height="100" viewBox="0 0 200 100">
+                <circle cx="20" cy="50" r="10" fill="#e74c3c" />
+                <path d="M 30 50 Q 100 80 170 50" stroke="black" fill="transparent" stroke-dasharray="5"/>
+                <rect x="175" y="40" width="20" height="20" fill="#3498db" />
+            </svg>
+            <p>[圖 1.1-1: 震源 - 介質 - 接收器]</p>
+        </div>
+        <ul>
+            <li><strong>震源 (Source)：</strong> 產生能量的地方（如地震、爆炸）。</li>
+            <li><strong>介質 (Medium)：</strong> 波傳遞的空間（地球部分區域）。</li>
+            <li><strong>接收器 (Receiver)：</strong> 地震儀，記錄地面振動。</li>
+        </ul>
+    </section>
+
+    <section id="sec2">
+        <h2>二、地震圖的資訊解讀</h2>
+        <div class="quote">「地震圖 (Seismogram) 是記錄地面運動的資料，包含有關震源與介質的資訊。」</div>
+        <div class="plain-talk">地震圖就像是地球的「心電圖」，從圖上的波形大小、抵達時間，我們可以反推這股能量從哪來、中間經過了什麼岩石。</div>
+        <div class="img-box">[圖: 三分量地震儀紀錄示意圖]</div>
+    </section>
+
+    <section id="sec3">
+        <h2>三、地震學的多元應用</h2>
+        <p>地震學不只是學術研究，它有極高的實用價值：</p>
+        <ul>
+            <li><strong>內部構造探查：</strong> 確定地殼、地函、外核、內核的分佈。</li>
+            <li><strong>資源勘探：</strong> 透過人工震源（反射地震法）尋找石油與礦產。</li>
+            <li><strong>板塊動力：</strong> 了解地函對流如何帶動板塊運動。</li>
+        </ul>
+    </section>
+
+    <section id="sec4">
+        <h2>四、基本波物理現象</h2>
+        <div class="quote">「波在物理性質變化的介面會發生反射、折射與繞射。」</div>
+        <ul>
+            <li><strong>折射 (Refraction)：</strong> 波速隨深度增加，路徑會向水平彎曲並返回地表。</li>
+            <li><strong>反射 (Reflection)：</strong> 在核幔邊界 (CMB) 等介面發生能量彈回。</li>
+            <li><strong>繞射 (Diffraction)：</strong> 波繞過障礙物（如地核影子區）的現象。</li>
+        </ul>
+    </section>
+
+    <section id="sec5">
+        <h2>五、地震模型與科學方法</h2>
+        <h3>1. 正演 vs. 反演</h3>
+        <div class="plain-talk">
+            <strong>正演 (Forward)：</strong> 已知地質構造，預測地震圖長怎樣。<br>
+            <strong>反演 (Inverse)：</strong> 已知地震圖，回推地質構造是什麼（通常具有非唯一性）。
+        </div>
+        <h3>2. 不確定性</h3>
+        <ul>
+            <li><strong>隨機不確定性 (Aleatory)：</strong> 測量誤差。</li>
+            <li><strong>系統性不確定性 (Epistemic)：</strong> 我們對模型理解不足導致的誤差。</li>
+        </ul>
+    </section>
+
+    <section id="sec6">
+        <h2>六、板塊構造學說的歷史革命</h2>
+        <div class="quote">「韋格納在1915年提出大陸漂移說，但在早期並未被主流接受，直到1960年代地震學證據出現。」</div>
+        <div class="plain-talk">科學需要證據。早期科學家（如 Jeffreys）認為固體地球不可能漂移。直到地震學觀察到海溝與中洋脊的特殊地震分佈，才證實了板塊運動。</div>
+    </section>
+
+    <section id="sec7">
+        <h2>七、地震與社會：危害與風險</h2>
+        <div class="plain-talk">
+            <strong>地震危害 (Hazard)：</strong> 自然發生的地震強度（無法控制）。<br>
+            <strong>地震風險 (Risk)：</strong> 財產人命損失（可以透過工程減災來降低）。
+        </div>
+    </section>
+
+    <section id="sec8">
+        <h2>八、地震預測的挑戰與爭論</h2>
+        <div class="quote">「許多科學家認為地震具備不可預測性 (Unpredictable)。」</div>
+        <p>目前的技術仍難以精確給出「何時、何地、規模多大」。公眾常誤以為地震是可以預報的，這造成了溝通上的挑戰。</p>
+    </section>
+
+    <section id="sec9">
+        <h2>九、核武試爆監測與地震學</h2>
+        <div class="quote">「利用 mb（體波規模）與 Ms（表面波規模）的比例來區分爆炸與地震。」</div>
+        <div class="plain-talk">核爆會產生強大的壓力 P 波，導致 mb 值異常偏高，這是抓到「違規核試」的科學利器。</div>
+        <div class="img-box">[圖 1.2-20: mb 與 Ms 判別圖]</div>
+    </section>
+
+    <section id="sec10">
+        <h2>十、國際監測系統 (IMS)</h2>
+        <p>IMS 包含四大支柱：</p>
+        <ol>
+            <li><strong>地震網：</strong> 偵測震動。</li>
+            <li><strong>水下聲響：</strong> 監測海洋爆炸。</li>
+            <li><strong>低頻聲波 (Infrasound)：</strong> 監測大氣核爆（20Hz以下）。</li>
+            <li><strong>放射性核種：</strong> 捕捉大氣中殘留的核物質。</li>
+        </ol>
+    </section>
+
+    <section id="quiz">
+        <div class="quiz-container">
+            <h2>📘 單元測驗</h2>
+            <div id="quiz-content">
+                </div>
+            <button id="submit-btn" onclick="checkQuiz()">提交測驗並分析</button>
+
+            <div id="result-area">
+                <h3 id="score-display"></h3>
+                <div id="analysis-content"></div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    const questions = [
+        {
+            q: "1. 地震實驗中，「介質」通常指什麼？",
+            options: ["地震儀", "核彈頭", "地球的部分區域", "斷層面"],
+            ans: 2,
+            ref: "教科書 1.1 節定義：介質 (Medium) 指的是波傳過的地球區域。"
+        },
+        {
+            q: "2. 在核武監測中，為什麼爆炸的 mb 值通常比同能量的地震高？",
+            options: ["因為爆炸產生更多 S 波", "因為爆炸產生的 P 波能量異常集中且強大", "因為爆炸深度很深", "因為爆炸不會產生震波"],
+            ans: 1,
+            ref: "圖 1.2-20 說明：爆炸產生的 P 波非常大，導致 mb 異常偏高。"
+        },
+        {
+            q: "3. 下列何者描述「已知觀測結果回推成因」的過程？",
+            options: ["正演 (Forward)", "不確定性 (Uncertainty)", "反演 (Inverse)", "繞射 (Diffraction)"],
+            ans: 2,
+            ref: "1.2 節：反演 (Inverse problem) 是從數據回推震源與介質特性。"
+        },
+        {
+            q: "4. 地震危害 (Hazard) 與風險 (Risk) 的主要區別在於？",
+            options: ["危害是人為的，風險是自然的", "危害是無法改變的自然現象，風險可透過減災管理降低", "兩者意義完全相同", "風險是指地震儀的故障機率"],
+            ans: 1,
+            ref: "1.2 節討論地震與社會：Hazard 為地震本身，Risk 涉及受災的可能性。"
+        }
+    ];
+
+    function loadQuiz() {
+        const container = document.getElementById('quiz-content');
+        questions.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'question';
+            div.innerHTML = `<p><strong>${item.q}</strong></p>
+                <div class="options">
+                    ${item.options.map((opt, i) => `
+                        <label><input type="radio" name="q${index}" value="${i}"> ${opt}</label>
+                    `).join('')}
+                </div>`;
+            container.appendChild(div);
+        });
+    }
+
+    function checkQuiz() {
+        let score = 0;
+        let analysisHTML = "";
+        
+        questions.forEach((item, index) => {
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            if (selected) {
+                if (parseInt(selected.value) === item.ans) {
+                    score++;
+                    analysisHTML += `<p style="color:green">✅ 第 ${index+1} 題正確！<br><small>${item.ref}</small></p>`;
+                } else {
+                    analysisHTML += `<p style="color:red">❌ 第 ${index+1} 題錯誤。正確答案：${item.options[item.ans]}<br><small>${item.ref}</small></p>`;
+                }
+            } else {
+                analysisHTML += `<p style="color:gray">⚪ 第 ${index+1} 題未作答。</p>`;
+            }
+        });
+
+        const resultArea = document.getElementById('result-area');
+        resultArea.style.display = 'block';
+        resultArea.style.background = 'white';
+        document.getElementById('score-display').innerText = `您的得分：${score} / ${questions.length}`;
+        
+        let weakPoint = score < questions.length ? "需加強對「地震數據解讀」與「社會應用」之理解。" : "表現優異，已完全掌握第一章內容。";
+        document.getElementById('analysis-content').innerHTML = `
+            <h4>學習弱點分析：</h4>
+            <p>${weakPoint}</p>
+            <hr>
+            <h4>詳解與依據：</h4>
+            ${analysisHTML}
+        `;
+        resultArea.scrollIntoView();
+    }
+
+    // 初始化測驗
+    loadQuiz();
+
+    // 側邊欄滾動監聽
+    window.addEventListener('scroll', () => {
+        let current = "";
+        document.querySelectorAll('section').forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (pageYOffset >= sectionTop - 60) {
+                current = section.getAttribute('id');
+            }
+        });
+        document.querySelectorAll('nav ul li a').forEach(a => {
+            a.classList.remove('active');
+            if (a.getAttribute('href') === `#${current}`) {
+                a.classList.add('active');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
