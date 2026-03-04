@@ -1,348 +1,433 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>地震學導論：原理、社會影響與監測</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
-            scroll-behavior: smooth;
-        }
-        .text-primary { color: #1e3a8a; }
-        .bg-primary { background-color: #1e3a8a; }
-        .bg-secondary { background-color: #334155; }
-        
-        /* 側邊欄捲軸美化 */
-        .sidebar-scroll::-webkit-scrollbar { width: 6px; }
-        .sidebar-scroll::-webkit-scrollbar-track { background: #1e293b; }
-        .sidebar-scroll::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
-        
-        /* 卡片懸浮動畫 */
-        .hover-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
-        .hover-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-        
-        /* 淡入動畫 */
-        .fade-in { animation: fadeIn 0.5s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>地震學第一章互動式學習網站</title>
+<style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; margin: 0; background: #f4f6f8; color: #333; height: 100vh; overflow: hidden; }
+    /* Sidebar */
+    .sidebar { width: 280px; background: #2c3e50; color: white; height: 100%; overflow-y: auto; display: flex; flex-direction: column; }
+    .sidebar h2 { padding: 20px; text-align: center; background: #1a252f; margin: 0; font-size: 1.2rem; }
+    .sidebar ul { list-style: none; padding: 0; margin: 0; flex-grow: 1; }
+    .sidebar li { padding: 15px 20px; cursor: pointer; border-bottom: 1px solid #34495e; transition: 0.3s; font-size: 0.95rem; }
+    .sidebar li:hover, .sidebar li.active { background: #34495e; border-left: 4px solid #3498db; }
+    .sidebar .section-title { background: #22313f; font-weight: bold; color: #bdc3c7; cursor: default; border-bottom: none; }
+    .sidebar .section-title:hover { background: #22313f; border-left: none; }
+    /* Content */
+    .content-wrapper { flex-grow: 1; overflow-y: auto; padding: 40px; scroll-behavior: smooth; }
+    .card { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 40px; display: none; }
+    .card.active { display: block; animation: fadeIn 0.5s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; margin-top: 0; }
+    h3 { color: #2980b9; margin-top: 30px; }
+    p { line-height: 1.7; color: #444; }
+    /* Citation & Explanation */
+    .citation { font-style: italic; color: #555; border-left: 4px solid #bdc3c7; padding: 15px; margin: 15px 0; background: #ecf0f1; border-radius: 0 5px 5px 0; font-size: 0.95rem; }
+    .explanation { background: #e8f4f8; padding: 15px; border-radius: 5px; border: 1px solid #bce8f1; margin-bottom: 20px; }
+    .explanation strong { color: #31708f; }
+    /* Interactive Elements */
+    .interactive-area { margin-top: 25px; padding: 25px; border: 2px dashed #3498db; border-radius: 10px; background: #fafbfc; text-align: center; position: relative; }
+    .anim-box { width: 100%; height: 200px; background: #fff; border: 1px solid #ddd; border-radius: 5px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;}
+    .slider-container { display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 15px; }
+    input[type=range] { width: 60%; }
+    .btn { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 1rem; transition: 0.2s; margin: 5px; }
+    .btn:hover { background: #2980b9; }
+    /* Quiz */
+    .quiz-section { margin-top: 50px; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    .question { margin-bottom: 25px; padding: 20px; background: #f9f9f9; border-radius: 8px; border-left: 4px solid #f39c12; }
+    .options label { display: block; padding: 10px; margin: 5px 0; background: #fff; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; transition: 0.2s; }
+    .options label:hover { background: #f1f1f1; }
+    .options input { margin-right: 10px; }
+    .quiz-result { margin-top: 20px; padding: 20px; display: none; border-radius: 8px; font-weight: bold; }
+    .quiz-result.show { display: block; }
+    .correct { background: #dff0d8; color: #3c763d; }
+    .incorrect { background: #f2dede; color: #a94442; }
+    .feedback { font-size: 0.9rem; color: #666; margin-top: 10px; font-weight: normal; }
+    /* Animations */
+    @keyframes waveMove { 0% { transform: translateX(-50px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateX(200px); opacity: 0; } }
+    .wave-particle { width: 20px; height: 20px; background: #e74c3c; border-radius: 50%; position: absolute; animation: waveMove 2s infinite linear; }
+</style>
 </head>
-<body class="flex h-screen overflow-hidden">
+<body>
 
-    <!-- 手機版導覽列按鈕 -->
-    <button id="mobile-menu-btn" class="md:hidden fixed top-4 right-4 z-50 bg-primary text-white p-3 rounded-full shadow-lg">
-        <i class="fas fa-bars"></i>
-    </button>
+<div class="sidebar">
+    <h2>地震學第一章</h2>
+    <ul>
+        <li class="section-title">一、基本概念與模型</li>
+        <li data-target="ch1-1" class="active">1. 地震學的定義與核心機制</li>
+        <li data-target="ch1-2">2. 探索地球內部的工具</li>
+        <li data-target="ch1-3">3. 地震波的傳播特性</li>
+        <li data-target="ch1-4">4. 地震波種類與相位命名</li>
+        <li data-target="ch1-5">5. 震源機制分析</li>
+        <li data-target="ch1-6">6. 逆問題與模型建構</li>
+        <li class="section-title">二、地震學與社會的連結</li>
+        <li data-target="ch2-1">1. 地震危害 vs 地震風險</li>
+        <li data-target="ch2-2">2. 工程地震學</li>
+        <li data-target="ch2-3">3. 次生災害</li>
+        <li data-target="ch2-4">4. 地行動力衰減公式</li>
+        <li data-target="ch2-5">5. 預報、預測與 Seismic Gap</li>
+        <li data-target="ch2-6">6. 預測方法與核試驗監測</li>
+        <li class="section-title">測驗與評估</li>
+        <li data-target="quiz">📘 單元總測驗</li>
+    </ul>
+</div>
 
-    <!-- 左側目錄欄 -->
-    <aside id="sidebar" class="bg-slate-900 text-slate-300 w-72 flex-shrink-0 h-full flex flex-col transition-transform duration-300 absolute md:relative z-40 transform -translate-x-full md:translate-x-0">
-        <div class="p-6 bg-slate-950 border-b border-slate-800">
-            <h1 class="text-xl font-bold text-white"><i class="fas fa-globe-americas mr-2"></i>地震學知識庫</h1>
-            <p class="text-sm text-slate-400 mt-2">第一章：導論與社會影響</p>
+<div class="content-wrapper">
+    <div id="ch1-1" class="card active">
+        <h1>1. 地震學的定義與核心機制</h1>
+        <div class="citation">
+            「地震學是研究彈性波（或聲波）在固體地球內傳播的科學。地震波由天然（如地震）或人工（如爆炸）的震源產生，穿過地球內部介質後，由地震儀接收並記錄成地震圖（Seismogram）。」
+            "This book is an introduction to seismology, the study of elastic waves or sound waves in the solid earth. Conceptually, the sub- ject is simple. Seismic waves are generated at a source... The resulting waves propagate through the medium... and are recorded at a receiver."
         </div>
-        <nav class="flex-1 overflow-y-auto sidebar-scroll p-4 space-y-1" id="nav-menu">
-            <!-- JavaScript 將在此動態生成目錄 -->
-        </nav>
-        <div class="p-4 bg-slate-950 border-t border-slate-800">
-            <button onclick="showQuiz()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded transition">
-                <i class="fas fa-pencil-alt mr-2"></i>開始單元測驗
-            </button>
+        <div class="explanation">
+            <strong>白話說明：</strong> 地震學就像是地球的「超音波檢測」。當斷層錯動（天然）或發生爆炸（人工）時，會產生震波。這些波穿過地球內部不同的岩層，最後被地表的地震儀捕捉下來。科學家就是透過解讀這些波的紀錄（地震圖）來了解地球內部發生了什麼事。
         </div>
-    </aside>
+        <div class="interactive-area">
+            <h3>互動動畫：震源 → 地球介質 → 接收器 → 地震圖</h3>
+            <div class="anim-box" id="anim-1">
+                <svg width="100%" height="100%" viewBox="0 0 500 200">
+                    <circle cx="50" cy="100" r="10" fill="#e74c3c" />
+                    <text x="35" y="130" font-size="12">震源</text>
+                    <rect x="100" y="50" width="300" height="100" fill="#ecf0f1" rx="10"/>
+                    <text x="230" y="105" font-size="14" fill="#7f8c8d">地球介質 (Medium)</text>
+                    <polygon points="430,100 450,80 470,100 470,120 430,120" fill="#3498db"/>
+                    <text x="430" y="140" font-size="12">接收器</text>
+                    <circle cx="50" cy="100" r="10" fill="none" stroke="#e74c3c" stroke-width="2">
+                        <animate attributeName="r" from="10" to="80" dur="1.5s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" from="1" to="0" dur="1.5s" repeatCount="indefinite" />
+                    </circle>
+                </svg>
+            </div>
+            <p>觀察上方示意圖，紅色的震源產生波動，經過介質傳遞後抵達藍色的接收器。</p>
+        </div>
+    </div>
 
-    <!-- 右側主要內容區 -->
-    <main class="flex-1 overflow-y-auto h-full bg-slate-50 relative" id="main-content">
-        <div class="max-w-4xl mx-auto p-6 md:p-10 pb-24" id="content-container">
-            <!-- JavaScript 將在此動態生成內容 -->
-            <div class="text-center mt-20 fade-in">
-                <i class="fas fa-book-reader text-6xl text-slate-300 mb-4"></i>
-                <h2 class="text-2xl font-bold text-slate-600">歡迎來到地震學大師講堂</h2>
-                <p class="text-slate-500 mt-2">請從左側目錄選擇章節開始學習，或直接進行測驗檢視實力。</p>
+    <div id="ch1-2" class="card">
+        <h1>2. 探索地球內部的工具</h1>
+        <div class="citation">
+            「由於人類無法直接觀測地球深處，地震波成為探索地球內部結構（如地殼、地函、液態外核與固態內核）物理與化學性質的最有力工具。此外，地震學也致力於研究地震震源、斷層活動及其力學機制。在社會應用上，地震學被廣泛用於探勘石油與礦產等天然資源。」
+        </div>
+        <div class="explanation">
+            <strong>白話說明：</strong> 我們沒辦法挖穿地球，目前人類最深的鑽探也才十幾公里。因此，我們利用地震波在不同物質中傳播速度不同的特性，來「透視」地球的內部構造（地殼、地函、地核）。這項技術（地震反射法）也被石油公司用來找地底下的油礦。
+        </div>
+        <div class="interactive-area">
+            <h3>互動圖解：點擊地球剖面圖</h3>
+            <div class="anim-box" style="height: 250px;">
+                <svg width="100%" height="100%" viewBox="0 0 300 250">
+                    <circle cx="150" cy="125" r="100" fill="#e67e22" id="layer-mantle" style="cursor:pointer;" onclick="showLayerInfo('地函：固態，波速隨深度增加，發生對流。')"/>
+                    <circle cx="150" cy="125" r="55" fill="#f1c40f" id="layer-outer-core" style="cursor:pointer;" onclick="showLayerInfo('液態外核：S波無法穿透，主要由鐵鎳組成。')"/>
+                    <circle cx="150" cy="125" r="20" fill="#ecf0f1" id="layer-inner-core" style="cursor:pointer;" onclick="showLayerInfo('固態內核：極高壓狀態下的固態鐵鎳核心。')"/>
+                    <circle cx="150" cy="125" r="105" fill="none" stroke="#34495e" stroke-width="5" id="layer-crust" style="cursor:pointer;" onclick="showLayerInfo('地殼：最外層的固態岩石薄殼。')"/>
+                </svg>
+            </div>
+            <p id="layer-info" style="font-weight:bold; color:#e74c3c;">點擊上方各層顯示物理特性說明</p>
+        </div>
+    </div>
+
+    <div id="ch1-3" class="card">
+        <h1>3. 地震波的傳播特性</h1>
+        <div class="citation">
+            「由於地球內部的地震波速通常隨深度增加，波的傳播路徑會產生折射（Refraction）而向下彎曲，最終彎向上方回到地表。」
+            "Just as light waves reflect at a mirror, seismic waves reflect at interfaces across which physical properties change... waves also undergo diffraction."
+        </div>
+        <div class="explanation">
+            <strong>白話說明：</strong> 地震波在地球內部不是走直線的！因為越深的地方壓力越大、岩石越緊密，波速通常越快。根據物理學的折射原理，波會偏向速度快的一方，導致射線路徑像個大Ｕ型一樣向下彎曲再回到地表。遇到介面時也會產生反射（Reflection）與繞射（Diffraction）。
+        </div>
+        <div class="interactive-area">
+            <h3>動畫模擬：波速隨深度增加而彎曲 (折射)</h3>
+            <div class="anim-box">
+                <svg width="100%" height="100%" viewBox="0 0 500 200">
+                    <line x1="0" y1="20" x2="500" y2="20" stroke="#2c3e50" stroke-width="2"/>
+                    <text x="10" y="15" font-size="12">地表</text>
+                    <path d="M 50 20 Q 250 200 450 20" fill="none" stroke="#3498db" stroke-width="3" stroke-dasharray="5,5">
+                        <animate attributeName="stroke-dashoffset" from="100" to="0" dur="2s" repeatCount="indefinite" />
+                    </path>
+                    <circle cx="50" cy="20" r="5" fill="#e74c3c"/>
+                    <circle cx="450" cy="20" r="5" fill="#2ecc71"/>
+                </svg>
             </div>
         </div>
-    </main>
+    </div>
 
-    <!-- JavaScript 邏輯與資料 -->
-    <script>
-        // 知識點資料庫 (依據上傳之 PDF 與提示設計)
-        const chapters = [
-            {
-                id: 'ch1',
-                title: '一、 地震學基礎定義',
-                quote: "This book is an introduction to seismology, the study of elastic waves or sound waves in the solid earth... Seismic waves are generated at a source... propagate through the medium... and are recorded at a receiver.",
-                explanation: "【白話說明】地震學就是研究「彈性波（或聲波）」在固體地球內部傳遞的科學。你可以把地球想像成一個巨大的果凍，當某處發生破裂（震源），震動的波紋會穿過果凍（介質），最後被我們的儀器（接收器/地震儀）記錄下來。這就是地震實驗的三個核心元素。",
-                icon: 'fa-wave-square',
-                svg: `<svg viewBox="0 0 400 200" class="w-full h-48 bg-slate-100 rounded-lg"><circle cx="100" cy="100" r="10" fill="#ef4444"/><text x="90" y="130" class="text-sm">震源 (Source)</text><path d="M120,100 Q200,50 280,100" fill="none" stroke="#3b82f6" stroke-width="2" stroke-dasharray="5,5"/><text x="180" y="70" class="text-sm fill-blue-600">介質傳遞</text><rect x="290" y="85" width="30" height="30" fill="#10b981"/><text x="270" y="130" class="text-sm">接收器 (Receiver)</text></svg>`
-            },
-            {
-                id: 'ch2',
-                title: '二、 地震圖的資訊解讀',
-                quote: "A seismogram, the record of the motion of the ground at a receiver called a seismometer, thus contains information about both the source and the medium.",
-                explanation: "【白話說明】地震圖（Seismogram）是地面運動的紀錄軌跡。它就像是地球的「心電圖」，裡面藏著兩個重要秘密：一是「心臟」（震源）在哪裡、有多強；二是波傳遞過來的「血管」（介質/地球內部）狀態如何（例如哪裡是液體、哪裡密度高）。",
-                icon: 'fa-chart-line'
-            },
-            {
-                id: 'ch3',
-                title: '三、 地震學的多元應用',
-                quote: "The waves provide information on the location and nature of the source... to study the interior of the earth. ... resource exploration (oil and minerals) ... study tectonic history.",
-                explanation: "【白話說明】地震學不只用來研究地震！它的應用非常廣泛：<br>1. <b>探查地球內部構造</b>：像X光一樣了解地殼、地函與地核。<br>2. <b>資源勘探</b>：尋找地底下的石油或礦產。<br>3. <b>板塊構造學</b>：研究地球幾十億年來的地函對流與板塊運動歷史。",
-                icon: 'fa-globe'
-            },
-            {
-                id: 'ch4',
-                title: '四、 基本波物理現象',
-                quote: "Refraction: velocity increases with depth, causing the path to bend horizontally... Reflection: at interfaces with changing physical properties (e.g. core-mantle boundary)... Diffraction: waves bend around obstacles.",
-                explanation: "【白話說明】地震波在地球裡傳遞時會遇到三種現象：<br>1. <b>折射 (Refraction)</b>：越往深處波速越快，所以波前進的路線會彎曲，最後回到地表。<br>2. <b>反射 (Reflection)</b>：撞到不同物質的邊界（如地函跟地核的交界）時反彈。<br>3. <b>繞射 (Diffraction)</b>：波遇到障礙物（像地核邊緣）時，會稍微轉彎繞過去。",
-                icon: 'fa-water'
-            },
-            {
-                id: 'ch5',
-                title: '五、 地震模型與科學方法',
-                quote: "Forward problems: use theory to predict seismograms. Inverse problems: infer source and medium properties from seismograms, usually non-unique. Uncertainty is divided into Aleatory and Epistemic.",
-                explanation: "【白話說明】科學家處理地震資料有兩個方向：<br><b>正演 (Forward)</b>：已知地球長怎樣，去猜測地震圖會畫出什麼波形。<br><b>反演 (Inverse)</b>：看著現成的地震圖，去回推地球內部到底長怎樣（這通常很難，因為可能有很多種答案）。<br>另外，我們評估誤差時分為：<b>隨機不確定性</b>（儀器本身的隨機誤差）與<b>系統/認識不確定性</b>（我們選錯了理論模型造成的誤差）。",
-                icon: 'fa-project-diagram'
-            },
-            {
-                id: 'ch6',
-                title: '六、 板塊構造學說的歷史革命',
-                quote: "The classic geological example of advancing beyond conventional thinking is the plate tectonic revolution of the late 1960s. ... Alfred Wegener in 1915...",
-                explanation: "【白話說明】1915年，韋格納提出「大陸漂移說」，但當時的科學界（包含地震學權威）覺得這不可能發生，因為缺乏動力機制。直到1960年代，透過地震分布與海底擴張的證據，科學界才發生了思想大革命，接受了我們現在熟知的「板塊構造學說」。這展示了科學是不斷推翻舊思維的過程。",
-                icon: 'fa-layer-group'
-            },
-            {
-                id: 'ch7',
-                title: '七、 地震與社會：危害與風險',
-                quote: "Hazard refers to the natural phenomenon itself, while Risk includes the economic and social consequences. Earthquake engineering plays a key role in mitigation.",
-                explanation: "【白話說明】我們必須區分兩個觀念：<br><b>危害 (Hazard)</b>：指的是大自然發生的斷層錯動、地表震動等客觀自然現象。<br><b>風險 (Risk)</b>：是指這些現象對人類社會造成的生命財產損失。<br>在沙漠發生大地震，危害很大但風險很小；在城市發生中型地震，風險卻極高。這就是為什麼「地震工程（建築防震）」在減災中扮演關鍵角色。",
-                icon: 'fa-house-damage'
-            },
-            {
-                id: 'ch8',
-                title: '八、 地震預測的挑戰與爭論',
-                quote: "Earthquake prediction is highly debated. Critics argue the program is scientifically weak... and gives the public the misleading impression that earthquakes can currently be predicted.",
-                explanation: "【白話說明】目前科學界對「地震能否被精確預測」存在巨大爭議。許多地震學家認為，現今的科技無法準確預測地震發生的時間、地點與規模。過度宣傳預測可能會讓大眾產生錯誤的安全感或恐慌，因此風險溝通是非常困難的挑戰。",
-                icon: 'fa-exclamation-triangle'
-            },
-            {
-                id: 'ch9',
-                title: '九、 核武試爆監測與地震學',
-                quote: "Because the P waves of explosions are very large... they have anomalously high mb values for a given source energy. A comparison of mb and Ms can thus discriminate between earthquakes and nuclear explosions.",
-                explanation: "【白話說明】地震學也是維持世界和平的武器！地下核爆跟天然地震的波形不一樣。核彈爆炸的能量非常集中，會產生極大的「體波 (P波)」，但「表面波」相對較小。所以科學家透過計算體波規模 (mb) 與表面波規模 (Ms) 的比例，就能抓出誰在偷偷進行地下核試爆。",
-                icon: 'fa-bomb'
-            },
-            {
-                id: 'ch10',
-                title: '十、 國際監測系統 (IMS)',
-                quote: "International Monitoring System (IMS)... combine seismological, hydroacoustic, and infrasound networks. Underwater nuclear tests create sound waves... atmospheric tests generate infrasonic waves.",
-                explanation: "【白話說明】為了落實《全面禁止核試驗條約 (CTBT)》，國際社會建立了 IMS 網路。這是一個天羅地網的系統，包含四種武器：<br>1. <b>地震觀測網</b>：抓地下核爆。<br>2. <b>水下聲響系統</b>：抓海中核爆。<br>3. <b>低頻聲波 (Infrasound)</b>：聽取大氣層中人類聽不到的爆炸低音波。<br>4. <b>放射性核種觀測</b>：偵測空氣中的輻射微粒。",
-                icon: 'fa-satellite-dish'
-            }
-        ];
+    <div id="ch1-4" class="card">
+        <h1>4. 地震波種類與相位命名</h1>
+        <div class="citation">
+            「體波（Body waves）：在地球內部傳播的波，分為質點運動方向與傳播方向平行的 P波（壓縮波），以及質點運動方向與傳播方向垂直的 S波（剪力波）。表面波（Surface waves）：沿著地球表面傳播的波，例如雷利波（Rayleigh waves）。地震相位（Phases）：根據波傳播的路徑命名，例如直接到達的 P波與 S波、經地表反射的 pP與 PP波，以及在核函邊界反射的 ScS波等。」
+        </div>
+        <div class="explanation">
+            <strong>白話說明：</strong> 
+            <ul>
+                <li><strong>P波 (Primary)：</strong> 壓縮波，速度最快，質點前後震動。</li>
+                <li><strong>S波 (Secondary)：</strong> 剪力波，速度次之，質點上下或左右震動。</li>
+                <li><strong>Rayleigh波：</strong> 表面波的一種，像海浪一樣在原地做逆時針的橢圓翻滾，破壞力極強。</li>
+                <li><strong>相位命名：</strong> 大寫P/S代表在地函走的波，小寫p/s代表先往上打到地表再彈下去的波，c代表在核函邊界(Core-mantle boundary)反彈。如 ScS 就是 S波往下打到地核反彈回來的S波。</li>
+            </ul>
+        </div>
+        <div class="interactive-area">
+            <h3>互動動畫：P波與S波運動方式</h3>
+            <button class="btn" onclick="document.getElementById('wave-anim').innerHTML='P波：質點平行於傳播方向前後震盪 (|||| | | |||| | |)'">展示 P 波</button>
+            <button class="btn" onclick="document.getElementById('wave-anim').innerHTML='S波：質點垂直於傳播方向上下震盪 (波浪狀)'">展示 S 波</button>
+            <button class="btn" onclick="document.getElementById('wave-anim').innerHTML='Rayleigh波：逆時針橢圓形翻滾'">展示 Rayleigh 波</button>
+            <div id="wave-anim" style="margin-top:20px; font-size:1.2rem; font-weight:bold; color:#2980b9;">請選擇一種波來觀察</div>
+        </div>
+    </div>
 
-        // 測驗題庫 (20題，涵蓋所有章節)
-        const quizQuestions = [
-            { q: "地震學主要研究的是固體地球中的哪一種現象？", options: ["電磁波傳遞", "彈性波或聲波", "重力波干涉", "熱輻射"], ans: 1, ch: 0 },
-            { q: "下列何者不屬於地震實驗的三個基本組成元素？", options: ["大氣", "震源", "接收器", "介質"], ans: 0, ch: 0 },
-            { q: "地震圖 (Seismogram) 最主要的功能是記錄什麼？", options: ["大氣壓力變化", "地球磁場波動", "地面運動的資料", "地核溫度"], ans: 2, ch: 1 },
-            { q: "我們無法從地震圖的紀錄中，直接提取出哪一項資訊？", options: ["震源的位置", "介質的物理性質", "未來一週的降雨量", "地震波的速度結構"], ans: 2, ch: 1 },
-            { q: "在資源勘探中，地震學最常被用來尋找什麼？", options: ["外星隕石", "石油與礦產", "地下乾淨空氣", "琥珀化石"], ans: 1, ch: 2 },
-            { q: "地震學對於研究地球幾十億年來的演化，主要貢獻在於證明了什麼歷史？", options: ["生物演化史", "板塊構造與地函對流的動力歷史", "太陽系形成史", "海洋鹽度變化史"], ans: 1, ch: 2 },
-            { q: "當地震波速度隨深度增加時，波的路徑向水平方向彎曲並返回地表的現象稱為？", options: ["繞射", "折射", "散射", "直射"], ans: 1, ch: 3 },
-            { q: "地震波遇到地核這類巨大障礙物時，波會彎曲繞過去的現象稱為？", options: ["反射", "吸收", "繞射", "極化"], ans: 2, ch: 3 },
-            { q: "「利用既有理論去預測地震圖的樣貌」屬於哪一種科學問題？", options: ["正演 (Forward) 問題", "反演 (Inverse) 問題", "社會科學問題", "哲學問題"], ans: 0, ch: 4 },
-            { q: "因為「選錯科學模型」而造成的地震數據不確定性，在分類上屬於？", options: ["隨機不確定性", "系統（認識）不確定性", "人為記錄遺失", "絕對不確定性"], ans: 1, ch: 4 },
-            { q: "1915年提出「大陸漂移說」的科學家是誰？", options: ["愛因斯坦", "韋格納 (Alfred Wegener)", "牛頓", "居禮夫人"], ans: 1, ch: 5 },
-            { q: "板塊構造學說大約在何時才引發革命並被科學社群廣泛接受？", options: ["1890年代", "1920年代", "1960年代", "2000年代"], ans: 2, ch: 5 },
-            { q: "在地震學與社會的討論中，「地震風險 (Risk)」的定義主要側重於？", options: ["自然界的斷層長度", "對人類社會造成的經濟與生命損失", "地震波的頻率", "岩石破裂的物理機制"], ans: 1, ch: 6 },
-            { q: "為了減輕地震風險，現代社會最主要依賴下列哪一種專業領域的角色？", options: ["占星學", "地震工程", "氣象學", "海洋生物學"], ans: 1, ch: 6 },
-            { q: "目前科學界對於「精準預測地震時間與地點」的共識為何？", options: ["已經可以提前一週精準預測", "存在極大爭議且目前被認為無法精準預測", "只要超級電腦夠快就能 100% 預測", "只有特定國家擁有預測技術"], ans: 1, ch: 7 },
-            { q: "向社會大眾發布不準確的地震預測，最可能造成的負面影響是？", options: ["導致地球自轉減慢", "給予公眾錯誤的安全感或引發不必要的恐慌", "增加地下石油蘊藏量", "改變斷層的走向"], ans: 1, ch: 7 },
-            { q: "用來區分「自然地震」與「地下核試爆」的一項關鍵技術指標是比較什麼？", options: ["震央所在國家的政治體制", "體波規模(mb)與表面波規模(Ms)的比例", "地震發生的季節", "當地是否有火山"], ans: 1, ch: 8 },
-            { q: "地下核爆的特徵通常是？", options: ["P波極小，表面波極大", "完全不產生P波", "P波異常大，使得 mb 數值偏高", "只產生S波"], ans: 2, ch: 8 },
-            { q: "國際監測系統 (IMS) 的主要目的是為了監督哪一項國際條約的執行？", options: ["京都議定書", "全面禁止核試驗條約 (CTBT)", "巴黎氣候協定", "聯合國海洋法公約"], ans: 1, ch: 9 },
-            { q: "IMS 用來偵測大氣層中核爆的主要觀測工具是？", options: ["水下聲響系統", "地震觀測網", "低頻聲波 (Infrasound) 監測", "雷射測距儀"], ans: 2, ch: 9 }
-        ];
+    <div id="ch1-5" class="card">
+        <h1>5. 震源機制分析</h1>
+        <div class="citation">
+            「科學家透過分析地震網在各方位記錄到的P波初動方向（First motions，分為壓縮與膨脹象限），可以推斷斷層的走向以及滑動方向。」
+        </div>
+        <div class="explanation">
+            <strong>白話說明：</strong> 地震發生的瞬間，斷層錯動會推擠前方的岩石（產生壓縮，P波初動向上），同時拉扯後方的岩石（產生膨脹，P波初動向下）。把四面八方測站量到的初動方向畫在一個圓球上，會呈現出類似「西瓜切四塊」的圖案（兩個壓縮區、兩個膨脹區），我們稱之為「震源機制解」或沙灘球（Beachball），能藉此看出是正斷層、逆斷層還是平移斷層。
+        </div>
+        <div class="interactive-area">
+            <h3>模擬：P波初動與象限圖 (沙灘球概念)</h3>
+            <div class="anim-box" style="height: 200px;">
+                <svg width="200" height="200" viewBox="0 0 200 200">
+                    <circle cx="100" cy="100" r="80" fill="#ecf0f1" stroke="#333" stroke-width="2"/>
+                    <path d="M100 20 A 80 80 0 0 1 180 100 L 100 100 Z" fill="#2c3e50"/>
+                    <path d="M100 180 A 80 80 0 0 1 20 100 L 100 100 Z" fill="#2c3e50"/>
+                    <text x="130" y="70" fill="white" font-size="12">壓縮 (Up)</text>
+                    <text x="35" y="140" fill="white" font-size="12">壓縮 (Up)</text>
+                    <text x="130" y="140" fill="#333" font-size="12">膨脹 (Down)</text>
+                    <text x="30" y="70" fill="#333" font-size="12">膨脹 (Down)</text>
+                </svg>
+            </div>
+        </div>
+    </div>
 
-        // 初始化介面
-        document.addEventListener('DOMContentLoaded', () => {
-            renderSidebar();
+    <div id="ch1-6" class="card">
+        <h1>6. 逆問題與模型建構</h1>
+        <div class="citation">
+            「地震學的特徵是解決「逆問題」，即透過觀測到的地震圖，反過來推導震源的特性與介質的結構。這類問題常面臨數據不足、解的非唯一性，以及觀測上的隨機性（Aleatory）與認知性（Epistemic）不確定性。」
+        </div>
+        <div class="explanation">
+            <strong>白話說明：</strong> 
+            <ul>
+                <li><strong>正問題 (Forward problem)：</strong> 知道炸藥在哪、地層長怎樣，算出會記錄到怎樣的波。</li>
+                <li><strong>逆問題 (Inverse problem)：</strong> 看到地震圖上的波，反推地震在哪裡發生、地底下長什麼樣子。</li>
+            </ul>
+            因為資料永遠不夠，而且不同結構可能產生相似的波形（非唯一解），所以結果總會帶有不確定性。隨機性（Aleatory）是測量誤差，認知性（Epistemic）則是我們對地球的物理模型了解不夠透徹。
+        </div>
+    </div>
+
+    <div id="ch2-1" class="card">
+        <h1>1. 地震危害 vs 地震風險 & 2. 工程地震學</h1>
+        <div class="citation">
+            「地震危害 (Hazard) ：指的是地震發生與隨之而來的地表震動等自然現象。這是一個無可避免的地質事實。地震風險 (Risk) ：指的是地震危害對人類生命財產所造成的威脅與損失程度。風險的高低會受到人類行為的影響。」<br><br>
+            「建築物在地震中的破壞程度取決於其共振週期（Resonant period）。當地震波的主要週期與建築的共振週期相近時，會造成嚴重的破壞。」
+        </div>
+        <div class="explanation">
+            <strong>白話說明：</strong> 
+            危害是天災（無法改變），風險是人禍與損失（可透過建築防震降低）。工程地震學中，最常測量的是「加速度」（單位 g），這是影響建築物受力的關鍵。建築物的高度決定了它的共振週期（樓層越高，週期越長）。如果地震波搖晃的頻率剛好跟建築物的週期一樣，就會產生「共振放大」效應，導致建築劇烈搖晃甚至倒塌（例如1985年墨西哥城地震）。
+        </div>
+        <div class="interactive-area">
+            <h3>共振模擬滑桿：調整地震波週期</h3>
+            <div class="slider-container">
+                <label>地震波週期: 短 <input type="range" id="wave-period" min="1" max="10" value="5"> 長</label>
+            </div>
+            <div style="display:flex; justify-content:space-around; margin-top:20px; align-items:flex-end; height:150px; border-bottom:2px solid #333;">
+                <div id="bldg-short" style="width:40px; height:50px; background:#e74c3c; transform-origin:bottom center; transition:0.2s;"></div>
+                <div id="bldg-med" style="width:40px; height:100px; background:#f1c40f; transform-origin:bottom center; transition:0.2s;"></div>
+                <div id="bldg-tall" style="width:40px; height:150px; background:#3498db; transform-origin:bottom center; transition:0.2s;"></div>
+            </div>
+            <p style="margin-top:10px;">(左: 矮房/短週期，中: 中層/中週期，右: 高樓/長週期)</p>
+            <script>
+                document.getElementById('wave-period').addEventListener('input', function() {
+                    let val = this.value;
+                    document.getElementById('bldg-short').style.transform = `rotate(${(10-val)*3}deg)`;
+                    document.getElementById('bldg-med').style.transform = `rotate(${val==5?15:0}deg)`;
+                    document.getElementById('bldg-tall').style.transform = `rotate(${val*3}deg)`;
+                });
+            </script>
+        </div>
+    </div>
+
+    <div id="ch2-3" class="card">
+        <h1>3. 次生災害 & 4. 地行動力衰減公式</h1>
+        <div class="citation">
+            「次生災害：海嘯...土壤液化（Soil liquefaction）：強烈震動使富含水分的鬆散沙土失去承載力，變得如同液體一般，導致建築物下沉或傾斜。」<br><br>
+            「公式 (1) 為： a(M, r) = b10^{cM}r^{-d}。此公式描述地表加速度 a 會隨著地震規模 M 增加而變大，並隨著距離 r 增加而衰減。能量衰減的原因在於：1. 幾何擴散... 2. 岩石的地質特性。」
+        </div>
+        <div class="explanation">
+            <strong>白話說明：</strong> 
+            地震可怕的不只搖晃，還有引發的海嘯、火災、和土壤液化。液化常發生在含水豐富的沙土區，搖晃讓沙粒間的接觸被水撐開，土地瞬間變成流沙。
+            衰減公式告訴我們：規模(M)越大，搖晃(a)越強；但距離(r)越遠，搖晃越弱。有趣的是，不同地質衰減速度不同。例如美國東部岩層比較硬實，能量衰減慢，所以同規模地震在東部影響的範圍比西部大得多。
+        </div>
+        <div class="interactive-area">
+            <h3>加速度衰減計算器</h3>
+            <p>設定參數模擬公式: a = 10^(0.5 * M) * r^(-1.2)</p>
+            規模 M: <input type="number" id="calc-m" value="6.0" step="0.1" style="width:60px;">
+            距離 r (km): <input type="number" id="calc-r" value="10" step="1" style="width:60px;">
+            <button class="btn" onclick="calcAccel()">計算相對加速度</button>
+            <div id="calc-result" style="margin-top:10px; font-weight:bold; color:#e74c3c;"></div>
+            <script>
+                function calcAccel() {
+                    let m = parseFloat(document.getElementById('calc-m').value);
+                    let r = parseFloat(document.getElementById('calc-r').value);
+                    if(r <= 0) r = 1;
+                    let a = Math.pow(10, 0.5 * m) * Math.pow(r, -1.2);
+                    document.getElementById('calc-result').innerText = "相對加速度數值: " + a.toFixed(2);
+                }
+            </script>
+        </div>
+    </div>
+
+    <div id="ch2-5" class="card">
+        <h1>5. 地震預報與預測 & 6. Seismic Gap</h1>
+        <div class="citation">
+            「預報 (Forecasting)：屬於長期評估。基於彈性反彈理論與歷史地質資料，評估特定斷層在未來一段時間（如數十年內）發生大地震的「機率」。預測 (Prediction)：屬於短期評估。試圖在地震發生前數年到數天內，精準給出地震發生的「確切時間、地點與規模」。」<br><br>
+            「Seismic gap (地震空白區)：指一條活躍的板塊邊界斷層上，長年未發生大地震而尚未破裂的區段。理論上，由於板塊持續運動，這些空白區正在累積應力，因此被認為是未來最有可能發生大地震以「填補」位移的危險區域。」
+        </div>
+        <div class="explanation">
+            <strong>白話說明：</strong> 預報就像說「台灣夏天有很高機率會來颱風」，是長期的機率評估，用來制定建築法規。預測則是說「明天下午三點台北會地震」，目前科學上幾乎做不到。
+            Seismic Gap（地震空白區）理論認為，如果一條斷層其他地方都破過了，唯獨某一段幾十年都沒動靜，那邊一定累積了巨大的能量，未來發生大地震的機率極高。
+        </div>
+    </div>
+
+    <div id="ch2-6" class="card">
+        <h1>7. 預測方法 & 8. 核試驗監測</h1>
+        <div class="citation">
+            「許多地震預測嘗試尋找地震發生前的「前兆（Precursors）」，這些方法包括：1. 前震與微震活動... 2. 地下水與氣體變化... 3. 岩石物理性質改變... 4. 地表變形... 5. 動物異常行為。」<br><br>
+            「自然地震是斷層錯動所致，會產生強烈的剪力，因此會輻射出巨大的表面波（Ms）；相對地，地下核爆是一種向外膨脹的壓縮爆炸力，缺乏剪力，因此它產生的 P波（體波 mb）能量會異常龐大，而表面波則相對微小。」
+        </div>
+        <div class="explanation">
+            <strong>白話說明：</strong> 科學家找了很多前兆（像是地下水變濁、氡氣增加、地表隆起等），但目前沒有任何一種前兆是100%準確的。<br>
+            另外，地震學可用來抓偷測核彈的國家。地震是斷層「摩擦錯動」，所以剪力波（S波與表面波Ms）很大；核爆是「向外膨脹」，所以壓縮波（P波/體波mb）特別大。比較這兩者的比例，就能輕易分辨是天然地震還是核爆。
+        </div>
+    </div>
+
+    <div id="quiz" class="card quiz-section">
+        <h1 style="color:#f39c12; border-bottom-color:#f39c12;">📘 單元總測驗</h1>
+        <p>測試您對地震學第一章的了解程度！</p>
+        
+        <div id="quiz-container">
+            <div class="question" data-ans="B">
+                <p><strong>1. 地震學家如何得知地球具有「液態外核」？</strong></p>
+                <ul class="options">
+                    <li><label><input type="radio" name="q1" value="A"> A) 透過鑽探船直接採樣</label></li>
+                    <li><label><input type="radio" name="q1" value="B"> B) 透過分析 S波無法穿透特定深度的現象</label></li>
+                    <li><label><input type="radio" name="q1" value="C"> C) 測量地表的地磁異常</label></li>
+                    <li><label><input type="radio" name="q1" value="D"> D) 利用石油探勘的反射數據</label></li>
+                </ul>
+            </div>
             
-            // 手機版側邊欄開關
-            const btn = document.getElementById('mobile-menu-btn');
-            const sidebar = document.getElementById('sidebar');
-            btn.addEventListener('click', () => {
-                sidebar.classList.toggle('-translate-x-full');
-            });
+            <div class="question" data-ans="A">
+                <p><strong>2. 關於體波（Body Waves），下列敘述何者正確？</strong></p>
+                <ul class="options">
+                    <li><label><input type="radio" name="q2" value="A"> A) P波的質點運動方向與波傳播方向平行</label></li>
+                    <li><label><input type="radio" name="q2" value="B"> B) S波的速度通常比 P波快</label></li>
+                    <li><label><input type="radio" name="q2" value="C"> C) Rayleigh波屬於體波的一種</label></li>
+                    <li><label><input type="radio" name="q2" value="D"> D) 體波只能在液體中傳播</label></li>
+                </ul>
+            </div>
+
+            <div class="question" data-ans="D">
+                <p><strong>3. 建築物在地震中最容易受到嚴重破壞的情況是：</strong></p>
+                <ul class="options">
+                    <li><label><input type="radio" name="q3" value="A"> A) 建築物位於堅硬的岩盤上</label></li>
+                    <li><label><input type="radio" name="q3" value="B"> B) 建築物的共振週期與地震波週期差異極大</label></li>
+                    <li><label><input type="radio" name="q3" value="C"> C) 地震的P波抵達時</label></li>
+                    <li><label><input type="radio" name="q3" value="D"> D) 建築物的共振週期與地震波的主要週期相近時</label></li>
+                </ul>
+            </div>
+
+            <div class="question" data-ans="C">
+                <p><strong>4. 如何利用地震學方法區分「天然地震」與「地下核子試爆」？</strong></p>
+                <ul class="options">
+                    <li><label><input type="radio" name="q4" value="A"> A) 核爆會產生極大的S波，無P波</label></li>
+                    <li><label><input type="radio" name="q4" value="B"> B) 天然地震只會產生表面波</label></li>
+                    <li><label><input type="radio" name="q4" value="C"> C) 核爆的P波能量異常龐大，表面波相對微小</label></li>
+                    <li><label><input type="radio" name="q4" value="D"> D) 兩者產生的地震圖完全一致，只能靠衛星觀測區分</label></li>
+                </ul>
+            </div>
+            
+            <button class="btn" onclick="submitQuiz()" style="width:100%; padding:15px; font-size:1.1rem;">提交答案</button>
+        </div>
+
+        <div id="quiz-results-display" class="quiz-result">
+            <h3 id="score-display"></h3>
+            <div id="feedback-display"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Navigation Logic
+    const navItems = document.querySelectorAll('.sidebar li[data-target]');
+    const cards = document.querySelectorAll('.card');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            navItems.forEach(nav => nav.classList.remove('active'));
+            item.classList.add('active');
+            
+            cards.forEach(card => card.classList.remove('active'));
+            document.getElementById(item.getAttribute('data-target')).classList.add('active');
+            
+            // Scroll to top
+            document.querySelector('.content-wrapper').scrollTop = 0;
+        });
+    });
+
+    // Earth Layer Info
+    function showLayerInfo(info) {
+        document.getElementById('layer-info').innerText = info;
+    }
+
+    // Quiz Logic
+    function submitQuiz() {
+        const questions = document.querySelectorAll('.question');
+        let correctCount = 0;
+        let feedbackHTML = "";
+
+        const explanations = [
+            "詳解：S波屬於剪力波，無法在液態中傳播。科學家觀測到 S波在穿越地球深處某個邊界時消失，從而推論出液態外核的存在。",
+            "詳解：P波（壓縮波）的質點運動平行於傳播方向，且速度最快；S波垂直於傳播方向；Rayleigh波屬於表面波。",
+            "詳解：當建築物的共振週期與地震波週期相吻合時，會產生劇烈的共振搖晃而受嚴重破壞。",
+            "詳解：核爆是一種膨脹力，缺乏剪力，因此會產生異常龐大的P波（體波）而表面波極小；天然地震斷層錯動則會產生巨大的表面波。"
+        ];
+
+        questions.forEach((q, index) => {
+            const selected = q.querySelector(`input[name="q${index+1}"]:checked`);
+            const correctAns = q.getAttribute('data-ans');
+            
+            if(selected) {
+                if(selected.value === correctAns) {
+                    correctCount++;
+                    feedbackHTML += `<div class="explanation correct">第 ${index+1} 題：正確！<br><span class="feedback">${explanations[index]}</span></div>`;
+                } else {
+                    feedbackHTML += `<div class="explanation incorrect">第 ${index+1} 題：錯誤。正確答案是 ${correctAns}。<br><span class="feedback">${explanations[index]}</span></div>`;
+                }
+            } else {
+                feedbackHTML += `<div class="explanation incorrect">第 ${index+1} 題：未作答。正確答案是 ${correctAns}。<br><span class="feedback">${explanations[index]}</span></div>`;
+            }
         });
 
-        function renderSidebar() {
-            const nav = document.getElementById('nav-menu');
-            nav.innerHTML = '';
-            chapters.forEach((ch, index) => {
-                const link = document.createElement('a');
-                link.href = `#`;
-                link.className = 'block px-4 py-3 rounded text-slate-300 hover:bg-slate-800 hover:text-white transition';
-                link.innerHTML = `<i class="fas ${ch.icon} w-6 text-center mr-2 text-slate-500"></i><span class="text-sm">${ch.title}</span>`;
-                link.onclick = (e) => {
-                    e.preventDefault();
-                    showContent(index);
-                    if(window.innerWidth < 768) {
-                        document.getElementById('sidebar').classList.add('-translate-x-full');
-                    }
-                };
-                nav.appendChild(link);
-            });
+        const resultDiv = document.getElementById('quiz-results-display');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedbackDisplay = document.getElementById('feedback-display');
+
+        scoreDisplay.innerText = `測驗完成！您的得分：${correctCount} / ${questions.length}`;
+        
+        let weakPoints = "";
+        if(correctCount < 4) {
+            weakPoints = "<strong>學習弱點分析：</strong> 您的基本概念仍有待加強。建議重點複習：";
+            weakPoints += "<ul>";
+            if(!document.querySelector('input[name="q1"]:checked') || document.querySelector('input[name="q1"]:checked').value !== 'B') weakPoints += "<li>探索地球內部的工具原理</li>";
+            if(!document.querySelector('input[name="q2"]:checked') || document.querySelector('input[name="q2"]:checked').value !== 'A') weakPoints += "<li>地震波種類與運動機制</li>";
+            if(!document.querySelector('input[name="q3"]:checked') || document.querySelector('input[name="q3"]:checked').value !== 'D') weakPoints += "<li>工程地震學：共振效應</li>";
+            if(!document.querySelector('input[name="q4"]:checked') || document.querySelector('input[name="q4"]:checked').value !== 'C') weakPoints += "<li>核試驗監測機制</li>";
+            weakPoints += "</ul>";
+        } else {
+            weakPoints = "<strong>學習分析：</strong> 表現優異！您已完全掌握本章核心知識，可繼續進入下一章學習。";
         }
+        
+        feedbackDisplay.innerHTML = feedbackHTML + `<div class="explanation" style="margin-top:20px;">${weakPoints}</div>`;
+        resultDiv.classList.add('show');
+    }
+</script>
 
-        function showContent(index) {
-            const ch = chapters[index];
-            const container = document.getElementById('content-container');
-            
-            let svgContent = ch.svg ? `<div class="mt-6 mb-6 flex justify-center">${ch.svg}</div>` : 
-                `<div class="mt-6 mb-6 flex items-center justify-center bg-slate-200 h-48 rounded-lg border-2 border-dashed border-slate-300">
-                    <span class="text-slate-500"><i class="fas fa-image mr-2"></i></span>
-                </div>`;
-
-            container.innerHTML = `
-                <div class="fade-in bg-white rounded-xl shadow-lg p-8 border-t-4 border-blue-600 hover-card">
-                    <div class="flex items-center mb-4 text-blue-600">
-                        <i class="fas ${ch.icon} text-3xl mr-4"></i>
-                        <h2 class="text-2xl font-bold">${ch.title}</h2>
-                    </div>
-                    
-                    <div class="bg-slate-50 border-l-4 border-slate-400 p-4 rounded-r-lg mb-6">
-                        <h3 class="text-sm font-bold text-slate-500 mb-1 uppercase tracking-wider"><i class="fas fa-quote-left mr-2"></i>Textbook Excerpt</h3>
-                        <p class="text-slate-700 font-serif italic">"${ch.quote}"</p>
-                    </div>
-
-                    <div class="prose max-w-none text-slate-700 leading-relaxed space-y-4">
-                        <p class="text-lg">${ch.explanation}</p>
-                    </div>
-                    
-                    ${svgContent}
-                    
-                    <div class="mt-8 flex justify-between border-t pt-4">
-                        ${index > 0 ? `<button onclick="showContent(${index-1})" class="text-slate-500 hover:text-blue-600"><i class="fas fa-arrow-left mr-1"></i> 上一節</button>` : '<div></div>'}
-                        ${index < chapters.length - 1 ? `<button onclick="showContent(${index+1})" class="text-slate-500 hover:text-blue-600">下一節 <i class="fas fa-arrow-right ml-1"></i></button>` : `<button onclick="showQuiz()" class="text-blue-600 font-bold hover:text-blue-800">前往單元測驗 <i class="fas fa-flag-checkered ml-1"></i></button>`}
-                    </div>
-                </div>
-            `;
-            container.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function showQuiz() {
-            const container = document.getElementById('content-container');
-            let quizHTML = `
-                <div class="fade-in bg-white rounded-xl shadow-lg p-8 border-t-4 border-green-500">
-                    <h2 class="text-2xl font-bold text-slate-800 mb-6"><i class="fas fa-tasks text-green-500 mr-2"></i>第一章 單元測驗</h2>
-                    <p class="text-slate-600 mb-8">請回答下列 20 題選擇題，測驗結束後將自動進行弱點分析。</p>
-                    <form id="quiz-form">
-            `;
-
-            quizQuestions.forEach((q, idx) => {
-                quizHTML += `
-                    <div class="mb-8 p-4 bg-slate-50 rounded-lg border border-slate-100 question-block">
-                        <p class="font-bold text-slate-700 mb-3">${idx + 1}. ${q.q}</p>
-                        <div class="space-y-2">
-                `;
-                q.options.forEach((opt, oIdx) => {
-                    quizHTML += `
-                            <label class="flex items-center p-3 rounded bg-white border border-slate-200 cursor-pointer hover:bg-blue-50 transition">
-                                <input type="radio" name="q${idx}" value="${oIdx}" class="mr-3 text-blue-600 focus:ring-blue-500">
-                                <span>${opt}</span>
-                            </label>
-                    `;
-                });
-                quizHTML += `
-                        </div>
-                        <div id="feedback-${idx}" class="mt-3 hidden text-sm font-bold p-3 rounded"></div>
-                    </div>
-                `;
-            });
-
-            quizHTML += `
-                    <button type="button" onclick="gradeQuiz()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-4 rounded-lg shadow transition text-lg">
-                        交卷評分
-                    </button>
-                    </form>
-                    <div id="quiz-results" class="mt-8 hidden"></div>
-                </div>
-            `;
-            container.innerHTML = quizHTML;
-            if(window.innerWidth < 768) {
-                document.getElementById('sidebar').classList.add('-translate-x-full');
-            }
-        }
-
-        function gradeQuiz() {
-            let score = 0;
-            let wrongChapters = new Set();
-            const form = document.getElementById('quiz-form');
-
-            quizQuestions.forEach((q, idx) => {
-                const selected = form.querySelector(`input[name="q${idx}"]:checked`);
-                const feedbackDiv = document.getElementById(`feedback-${idx}`);
-                feedbackDiv.classList.remove('hidden');
-
-                if (selected) {
-                    const ans = parseInt(selected.value);
-                    if (ans === q.ans) {
-                        score += 5; // 20題共100分
-                        feedbackDiv.innerHTML = `<i class="fas fa-check-circle mr-1"></i> 答對了！`;
-                        feedbackDiv.className = "mt-3 text-sm font-bold p-3 rounded bg-green-100 text-green-700";
-                    } else {
-                        wrongChapters.add(q.ch);
-                        feedbackDiv.innerHTML = `<i class="fas fa-times-circle mr-1"></i> 答錯了。正確答案為：${q.options[q.ans]}<br><span class="text-xs font-normal mt-1 block">請複習：${chapters[q.ch].title}</span>`;
-                        feedbackDiv.className = "mt-3 text-sm font-bold p-3 rounded bg-red-100 text-red-700";
-                    }
-                } else {
-                    wrongChapters.add(q.ch);
-                    feedbackDiv.innerHTML = `<i class="fas fa-exclamation-triangle mr-1"></i> 未作答。正確答案為：${q.options[q.ans]}`;
-                    feedbackDiv.className = "mt-3 text-sm font-bold p-3 rounded bg-orange-100 text-orange-700";
-                }
-            });
-
-            // 產生分析報告
-            const resultsDiv = document.getElementById('quiz-results');
-            resultsDiv.classList.remove('hidden');
-            resultsDiv.classList.add('fade-in');
-            
-            let weakAnalysis = "";
-            if (wrongChapters.size === 0) {
-                weakAnalysis = "<p class='text-green-600 font-bold'>太棒了！您對第一章的概念已經完全掌握！</p>";
-            } else {
-                weakAnalysis = "<p class='text-slate-700 mb-2'>建議您重新複習以下弱點單元：</p><ul class='list-disc pl-5 space-y-1'>";
-                wrongChapters.forEach(chIdx => {
-                    weakAnalysis += `<li><a href="#" onclick="showContent(${chIdx}); return false;" class="text-blue-600 hover:underline">${chapters[chIdx].title}</a></li>`;
-                });
-                weakAnalysis += "</ul>";
-            }
-
-            resultsDiv.innerHTML = `
-                <div class="bg-slate-800 text-white rounded-lg p-6 text-center shadow-inner">
-                    <h3 class="text-xl font-bold mb-2">測驗結果</h3>
-                    <div class="text-5xl font-black ${score >= 60 ? 'text-green-400' : 'text-red-400'} mb-4">${score} <span class="text-lg text-slate-400">/ 100 分</span></div>
-                    <div class="text-sm text-slate-300">
-                        答對：${score/5} 題 | 答錯/未答：${20 - score/5} 題
-                    </div>
-                </div>
-                <div class="mt-6 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r">
-                    <h4 class="font-bold text-blue-800 mb-2"><i class="fas fa-chart-pie mr-2"></i>學習弱點分析與建議</h4>
-                    ${weakAnalysis}
-                </div>
-                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="mt-6 w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-4 rounded transition">
-                    回到測驗頂部查看解析
-                </button>
-            `;
-            
-            // 捲動至結果區
-            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    </script>
 </body>
 </html>
