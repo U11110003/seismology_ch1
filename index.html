@@ -67,22 +67,30 @@
             padding: 0 1rem;
         }
 
+        /* Scroll Reveal Class */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .card {
             background: var(--card-bg);
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             padding: 2rem;
             margin-bottom: 2rem;
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
+            border-top: 4px solid var(--secondary-color);
         }
 
         h2 {
             color: var(--primary-color);
-            border-bottom: 2px solid var(--secondary-color);
+            border-bottom: 2px solid #e2e8f0;
             padding-bottom: 0.5rem;
             margin-bottom: 1.5rem;
         }
@@ -108,6 +116,12 @@
             border-radius: 8px;
             margin: 1rem 0;
             border: 1px solid #bee3f8;
+            transition: transform 0.3s;
+        }
+
+        .explanation:hover {
+            transform: scale(1.01);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
         .explanation::before {
@@ -127,7 +141,12 @@
             max-width: 100%;
             height: auto;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: transform 0.3s;
+        }
+
+        .img-container img:hover {
+            transform: scale(1.02);
         }
 
         .img-caption {
@@ -135,6 +154,118 @@
             color: #718096;
             margin-top: 0.5rem;
         }
+
+        /* --- Animation: Seismic Waves --- */
+        .wave-demo-container {
+            background: #2d3748;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            color: white;
+            text-align: center;
+        }
+        
+        .wave-track {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px auto;
+            width: 80%;
+            height: 60px;
+            border-bottom: 1px dashed #4a5568;
+            position: relative;
+        }
+
+        .particle {
+            width: 15px;
+            height: 15px;
+            background-color: #63b3ed;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        /* P Wave Animation (Horizontal compression) */
+        @keyframes pWaveMotion {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(20px); }
+        }
+
+        .p-wave .particle {
+            animation: pWaveMotion 1.5s infinite ease-in-out;
+        }
+
+        /* S Wave Animation (Vertical shear) */
+        @keyframes sWaveMotion {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-25px); }
+        }
+
+        .s-wave .particle {
+            animation: sWaveMotion 1.5s infinite ease-in-out;
+            background-color: #f6ad55;
+        }
+
+        /* Add delays to simulate wave propagation */
+        .particle:nth-child(1) { animation-delay: 0.0s; }
+        .particle:nth-child(2) { animation-delay: 0.1s; }
+        .particle:nth-child(3) { animation-delay: 0.2s; }
+        .particle:nth-child(4) { animation-delay: 0.3s; }
+        .particle:nth-child(5) { animation-delay: 0.4s; }
+        .particle:nth-child(6) { animation-delay: 0.5s; }
+        .particle:nth-child(7) { animation-delay: 0.6s; }
+        .particle:nth-child(8) { animation-delay: 0.7s; }
+        .particle:nth-child(9) { animation-delay: 0.8s; }
+        .particle:nth-child(10) { animation-delay: 0.9s; }
+        .particle:nth-child(11) { animation-delay: 1.0s; }
+        .particle:nth-child(12) { animation-delay: 1.1s; }
+
+
+        /* --- Animation: Resonance --- */
+        .resonance-demo {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            background: #e2e8f0;
+            height: 250px;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-bottom: 5px solid #a0aec0;
+        }
+
+        .building-anim {
+            width: 60px;
+            background: #4a5568;
+            border: 2px solid #2d3748;
+            border-bottom: none;
+            position: relative;
+            transform-origin: bottom center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding-top: 10px;
+            align-items: center;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .building-anim::before {
+            content: '';
+            position: absolute;
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            background-image: linear-gradient(transparent 80%, #cbd5e0 80%);
+            background-size: 100% 20px;
+            opacity: 0.3;
+        }
+
+        .b-short { height: 80px; animation: swayShort 0.6s infinite ease-in-out alternate; }
+        .b-mid { height: 140px; animation: swayMid 1.2s infinite ease-in-out alternate; background: #2b6cb0; }
+        .b-tall { height: 210px; animation: swayTall 2.4s infinite ease-in-out alternate; background: #2c7a7b;}
+
+        @keyframes swayShort { 0% { transform: rotate(-5deg); } 100% { transform: rotate(5deg); } }
+        @keyframes swayMid { 0% { transform: rotate(-8deg); } 100% { transform: rotate(8deg); } }
+        @keyframes swayTall { 0% { transform: rotate(-12deg); } 100% { transform: rotate(12deg); } }
 
         /* Quiz Styles */
         .quiz-container {
@@ -157,30 +288,34 @@
             margin: 8px 0;
             border-radius: 5px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.1s;
             border: 1px solid #e2e8f0;
         }
 
         .options label:hover {
             background: #edf2f7;
+            transform: translateX(5px);
+            border-color: var(--secondary-color);
         }
 
         .btn {
             background-color: var(--secondary-color);
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 1rem;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
             border-radius: 5px;
             cursor: pointer;
             display: block;
             width: 100%;
             margin-top: 1rem;
-            transition: background 0.3s;
+            transition: background 0.3s, transform 0.2s;
         }
 
         .btn:hover {
             background-color: var(--primary-color);
+            transform: translateY(-2px);
         }
 
         #result-box {
@@ -190,6 +325,12 @@
             background-color: #f0fff4;
             border: 2px solid var(--correct-color);
             border-radius: 8px;
+            animation: popIn 0.5s ease-out;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .feedback {
@@ -203,28 +344,50 @@
         .feedback.correct {
             background-color: #c6f6d5;
             color: #22543d;
+            border-left: 4px solid #38a169;
         }
 
         .feedback.wrong {
             background-color: #fed7d7;
             color: #742a2a;
+            border-left: 4px solid #e53e3e;
         }
 
         /* Toggle interaction */
         .interactive-section {
             cursor: pointer;
             background-color: #edf2f7;
-            padding: 10px;
+            padding: 12px;
             border-radius: 5px;
             margin: 10px 0;
             font-weight: bold;
             color: var(--primary-color);
+            transition: background 0.3s;
+            display: flex;
+            justify-content: space-between;
         }
+        
+        .interactive-section:hover {
+            background-color: #e2e8f0;
+        }
+
         .interactive-content {
             display: none;
-            padding: 10px;
-            border-left: 3px solid var(--secondary-color);
-            margin-left: 10px;
+            padding: 15px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-top: none;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            border-left: 4px solid var(--secondary-color);
+            margin-top: -10px;
+            margin-bottom: 15px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -247,7 +410,7 @@
 <div class="container">
     
     <!-- Section 1 -->
-    <section id="sec1" class="card">
+    <section id="sec1" class="card reveal">
         <h2>1. 地震學定義與研究地球內部</h2>
         
         <h3>1.1 地震學研究範疇</h3>
@@ -290,7 +453,7 @@
     </section>
 
     <!-- Section 2 -->
-    <section id="sec2" class="card">
+    <section id="sec2" class="card reveal">
         <h2>2. 地震波傳播特性與相位</h2>
         
         <h3>3.1 地震波種類與相位 (Seismic Phases)</h3>
@@ -308,6 +471,28 @@
                 <li>**表面波 (Surface Waves)**：如 Rayleigh 波，僅沿著地球表面傳播，雖然最晚抵達，但振幅通常最大、破壞力最強。</li>
                 <li>**相位 (Phases)**：教科書提及了諸多路徑代號，如 `pP` 代表先向上撞擊地表再往下傳的P波（可用於推算震源深度）；`ScS` 代表打到地核(Core)反彈的S波。</li>
             </ul>
+        </div>
+
+        <!-- 互動視覺：地震波模擬動畫 -->
+        <div class="wave-demo-container">
+            <h4 style="margin-bottom: 10px; color: #90cdf4;">🌊 動畫演示：P波與S波的質點運動差異</h4>
+            <p style="font-size: 0.85rem; color: #a0aec0; margin-bottom: 15px;">(波向右傳遞時，質點的相對運動方式)</p>
+            
+            <div style="text-align: left; padding-left: 10%;">P波 (壓縮波) - 質點平行於波傳遞方向運動</div>
+            <div class="wave-track p-wave">
+                <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+                <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+                <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+                <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+            </div>
+
+            <div style="text-align: left; padding-left: 10%; margin-top: 30px;">S波 (剪力波) - 質點垂直於波傳遞方向運動</div>
+            <div class="wave-track s-wave">
+                <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+                <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+                <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+                <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+            </div>
         </div>
 
         <h3>3.2 能量衰減公式探討</h3>
@@ -335,7 +520,7 @@
     </section>
 
     <!-- Section 3 -->
-    <section id="sec3" class="card">
+    <section id="sec3" class="card reveal">
         <h2>3. 震源機制與工程地震學</h2>
         
         <h3>5. 震源機制 (Focal Mechanism)</h3>
@@ -347,7 +532,8 @@
         </div>
 
         <div class="interactive-section" onclick="toggleContent('inv-prob')">
-            ▶ 點擊了解：什麼是逆問題 (Inverse Problem)？
+            <span>▶ 點擊了解：什麼是逆問題 (Inverse Problem)？</span>
+            <span>➕</span>
         </div>
         <div id="inv-prob" class="interactive-content">
             <p><strong>逆問題：</strong>教科書提到，正問題(Forward)是「已知地震與地質，推算會產生什麼地震圖」；而地震學家通常解決的是<strong>逆問題</strong>：「利用觀測到的地震圖，反推震源特性或地球內部構造」。因為資訊有限且充滿誤差，逆問題通常具有「非唯一性(Non-uniqueness)」，這是地震學的一大挑戰。</p>
@@ -364,10 +550,19 @@
     </section>
 
     <!-- Section 4 -->
-    <section id="sec4" class="card">
+    <section id="sec4" class="card reveal">
         <h2>4. 共振、場地效應與次生災害</h2>
         
         <h3>7. 共振現象與高度影響</h3>
+        
+        <!-- 互動視覺：建築物搖晃共振動畫 -->
+        <div class="resonance-demo">
+            <div class="building-anim b-short">1-3層<br>矮房</div>
+            <div class="building-anim b-mid">10層<br>大樓</div>
+            <div class="building-anim b-tall">30層+<br>摩天大樓</div>
+        </div>
+        <p style="text-align: center; font-size: 0.85rem; color: #718096; margin-bottom: 15px;">動畫演示：不同高度建築物的自然共振週期差異 (越高搖晃週期越長)</p>
+
         <div class="quote">
             "A building might collapse after a magnitude 7 earthquake, but remain standing after a magnitude 8 event with peak energy at a lower frequency."
         </div>
@@ -386,7 +581,7 @@
     </section>
 
     <!-- Section 5 -->
-    <section id="sec5" class="card">
+    <section id="sec5" class="card reveal">
         <h2>5. 地震預測與核災監測</h2>
 
         <h3>8. 地震預報 (Forecasting) vs 預測 (Prediction)</h3>
@@ -437,7 +632,7 @@
     </section>
 
     <!-- Quiz Section -->
-    <section id="quiz" class="quiz-container">
+    <section id="quiz" class="quiz-container reveal">
         <h2>📝 單元測驗與弱點分析</h2>
         <p>請完成以下精選 10 題測驗，系統將自動為你分析學習狀況！</p>
         
@@ -457,7 +652,27 @@
 </div>
 
 <script>
+    // ----------------------------------------------------
+    // Scroll Reveal Animation Script
+    // ----------------------------------------------------
+    function revealOnScroll() {
+        var reveals = document.querySelectorAll(".reveal");
+        for (var i = 0; i < reveals.length; i++) {
+            var windowHeight = window.innerHeight;
+            var elementTop = reveals[i].getBoundingClientRect().top;
+            var elementVisible = 100;
+            if (elementTop < windowHeight - elementVisible) {
+                reveals[i].classList.add("active");
+            }
+        }
+    }
+    window.addEventListener("scroll", revealOnScroll);
+    // Initial trigger
+    revealOnScroll();
+
+    // ----------------------------------------------------
     // Toggle function for interactive elements
+    // ----------------------------------------------------
     function toggleContent(id) {
         var el = document.getElementById(id);
         if (el.style.display === "block") {
@@ -467,7 +682,9 @@
         }
     }
 
-    // Quiz Data (2 questions per main topic based on textbook text)
+    // ----------------------------------------------------
+    // Quiz Data & Logic
+    // ----------------------------------------------------
     const quizData = [
         {
             q: "1. 關於「危害 (Hazard)」與「風險 (Risk)」的敘述，依照教科書的定義何者正確？",
@@ -666,7 +883,9 @@
         resultBox.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // Add smooth scrolling to Nav links
+    // ----------------------------------------------------
+    // Smooth scrolling to Nav links
+    // ----------------------------------------------------
     document.querySelectorAll('nav a').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
