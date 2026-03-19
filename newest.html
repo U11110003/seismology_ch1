@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地震學第一章 Seismology Chapter 1</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav id="sidebar">
+        <h2>地震學第一章</h2>
+        <ul>
+            <li class="section-title">1.1 基本概念與模型</li>
+            <li><a href="#sec-1-1-1" class="active">1. 定義與核心機制</a></li>
+            <li><a href="#sec-1-1-2">2. 探索地球內部</a></li>
+            <li><a href="#sec-1-1-3">3. 傳播特性</a></li>
+            <li><a href="#sec-1-1-4">4. 種類與相位</a></li>
+            <li><a href="#sec-1-1-5">5. 震源機制</a></li>
+            <li><a href="#sec-1-1-6">6. 逆問題與建構</a></li>
+            
+            <li class="section-title">1.2 地震學與社會</li>
+            <li><a href="#sec-1-2-1">1. Hazard vs Risk</a></li>
+            <li><a href="#sec-1-2-2">2. 工程地震學</a></li>
+            <li><a href="#sec-1-2-3">3. 次生災害</a></li>
+            <li><a href="#sec-1-2-4">4. 衰減公式</a></li>
+            <li><a href="#sec-1-2-5">5. 預報 vs 預測</a></li>
+            <li><a href="#sec-1-2-6">6. Seismic Gap</a></li>
+            <li><a href="#sec-1-2-7">7. 地震預測方法</a></li>
+            <li><a href="#sec-1-2-8">8. 核試驗監測</a></li>
+
+            <li class="section-title">單元測驗</li>
+            <li><a href="#sec-quiz">互動問題區</a></li>
+        </ul>
+    </nav>
+
+    <main id="content">
+        
+        <section id="sec-1-1-1" class="active-sec">
+            <h1>1.1.1 地震學的定義與核心機制</h1>
+            <p>地震學研究彈性波（Elastic waves）在地球中的傳播。震源可能為自然地震或人工爆炸。地震波穿過地球後由地震儀記錄為地震圖（Seismogram）。</p>
+            <div class="interactive-panel">
+                <h3>互動：震源傳播流程</h3>
+                <button onclick="playWaveAnimation()">觸發地震</button>
+                <div id="anim-flow" class="anim-container">
+                    <div id="source-dot"></div>
+                    <div id="wave-ring"></div>
+                    <div id="receiver-dot"></div>
+                </div>
+            </div>
+            <img src="https://raw.githubusercontent.com/U11110003/seismology_ch1/main/fig1.1-1.png" alt="圖1.1-1 地震實驗示意圖">
+        </section>
+
+        <section id="sec-1-1-2">
+            <h1>1.1.2 探索地球內部</h1>
+            <p>地震學可研究地殼、地函、外核（液態）、內核（固態），透過波速變化推論地球物質性質。地震反射法廣泛應用於石油與礦產探勘。</p>
+            <div class="interactive-panel flex-row">
+                <svg width="200" height="200" id="earth-svg">
+                    <circle cx="100" cy="100" r="90" fill="#cbd5e1" onclick="showEarthLayer('crust')"/>
+                    <circle cx="100" cy="100" r="85" fill="#fca5a5" onclick="showEarthLayer('mantle')"/>
+                    <circle cx="100" cy="100" r="45" fill="#fcd34d" onclick="showEarthLayer('outer')"/>
+                    <circle cx="100" cy="100" r="20" fill="#ef4444" onclick="showEarthLayer('inner')"/>
+                </svg>
+                <div id="earth-info">請點擊左側地球構造圖。</div>
+            </div>
+            <img src="https://raw.githubusercontent.com/U11110003/seismology_ch1/main/fig1.1-5.png" alt="圖1.1-5 反射法">
+        </section>
+
+        <section id="sec-1-1-3">
+            <h1>1.1.3 地震波傳播特性</h1>
+            <p>包括折射（Refraction）、反射（Reflection）、繞射（Diffraction）。波速隨深度增加時，波的路徑會逐漸彎曲。</p>
+            <div class="interactive-panel">
+                <h3>互動：波速梯度與折射</h3>
+                <label>調整速度梯度：</label>
+                <input type="range" id="gradient-slider" min="50" max="180" value="100" oninput="updateRefraction(this.value)">
+                <svg width="400" height="200" style="background:#f8fafc; border:1px solid #ccc; margin-top:10px;">
+                    <path id="refraction-path" d="M 20 20 Q 200 100 380 20" fill="transparent" stroke="#3b82f6" stroke-width="3"/>
+                </svg>
+            </div>
+            <img src="https://raw.githubusercontent.com/U11110003/seismology_ch1/main/fig1.1-2.png" alt="圖1.1-2 射線路徑">
+        </section>
+
+        <section id="sec-1-1-4">
+            <h1>1.1.4 地震波種類與相位</h1>
+            <p>分為體波 (P壓縮波, S剪力波) 與表面波 (Rayleigh滾動波)。常見相位包含 P, S, pP, PP, ScS 等。</p>
+            <div class="interactive-panel">
+                <button onclick="setWaveParticle('P')">P波</button>
+                <button onclick="setWaveParticle('S')">S波</button>
+                <button onclick="setWaveParticle('R')">Rayleigh波</button>
+                <div id="particle-container">
+                    <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+                </div>
+                <div id="phase-info" style="margin-top:10px; color:#1e3a8a; font-weight:bold;"></div>
+            </div>
+            <img src="https://raw.githubusercontent.com/U11110003/seismology_ch1/main/fig1.1-3.png" alt="圖1.1-3">
+            <img src="https://raw.githubusercontent.com/U11110003/seismology_ch1/main/fig1.1-4.png" alt="圖1.1-4">
+        </section>
+
+        <section id="sec-1-1-5">
+            <h1>1.1.5 震源機制 (First Motion)</h1>
+            <p>透過分析測站的 P波初動方向（壓縮或膨脹象限），可推論斷層的走向與滑動方向。</p>
+            <div class="interactive-panel" style="text-align:center;">
+                <div id="focal-mech">
+                    <div class="quadrant compress" onclick="alert('壓縮象限 (Compression)：初動向上')"></div>
+                    <div class="quadrant dilate" onclick="alert('膨脹象限 (Dilatation)：初動向下')"></div>
+                    <div class="quadrant dilate" onclick="alert('膨脹象限 (Dilatation)：初動向下')"></div>
+                    <div class="quadrant compress" onclick="alert('壓縮象限 (Compression)：初動向上')"></div>
+                </div>
+                <p>點擊象限查看初動說明</p>
+            </div>
+        </section>
+
+        <section id="sec-1-1-6">
+            <h1>1.1.6 逆問題與模型建構</h1>
+            <p>由觀測資料反推模型通常是非唯一解。不確定性分為 Aleatory (隨機性) 與 Epistemic (認知性)。</p>
+            <div class="interactive-panel">
+                <select id="model-select" onchange="changeModel()">
+                    <option value="obs">1. 觀測資料 (地震圖)</option>
+                    <option value="modA">2. 模型推論 A (淺層斷層)</option>
+                    <option value="modB">3. 模型推論 B (深層錯動)</option>
+                </select>
+                <div id="model-display" style="padding:20px; background:#e2e8f0; margin-top:10px;">請選擇步驟</div>
+            </div>
+        </section>
+
+        <section id="sec-1-2-1">
+            <h1>1.2.1 Hazard vs Risk</h1>
+            <p>Hazard 是自然地震現象；Risk 是對人類社會造成損害的機率。</p>
+            <div class="interactive-panel">
+                人口密度：<input type="range" id="pop-risk" min="1" max="10" value="5" oninput="calcRiskScore()"><br>
+                建築強度：<input type="range" id="build-risk" min="1" max="10" value="5" oninput="calcRiskScore()">
+                <h3 id="risk-score">當前風險：中等</h3>
+            </div>
+            <img src="https://raw.githubusercontent.com/U11110003/seismology_ch1/main/fig1.2-3.png" alt="圖1.2-3">
+        </section>
+
+        <section id="sec-1-2-2">
+            <h1>1.2.2 工程地震學</h1>
+            <p>建築高度與共振週期相關。軟土層會放大震動（場地效應）。</p>
+            <div class="interactive-panel">
+                <button onclick="triggerResonance(0.2)">高頻震波 (適合低樓層)</button>
+                <button onclick="triggerResonance(1.0)">低頻震波 (適合高樓層)</button>
+                <div class="flex-row" style="align-items:flex-end; height:150px; border-bottom:3px solid #64748b; margin-top:20px;">
+                    <div id="bld-low" class="building" style="height:40px;">單層</div>
+                    <div id="bld-high" class="building" style="height:120px;">十層</div>
+                </div>
+            </div>
+            <img src="https://raw.githubusercontent.com/U11110003/seismology_ch1/main/fig1.2-6.png" alt="圖1.2-6">
+        </section>
+
+        <section id="sec-1-2-3">
+            <h1>1.2.3 次生災害</h1>
+            <p>包括海嘯、土壤液化、火災與基礎設施破壞。</p>
+            <div class="interactive-panel">
+                <button onclick="document.getElementById('tsunami-wave').classList.toggle('tsunami-anim')">觸發海嘯</button>
+                <div style="height:100px; background:#e0f2fe; position:relative; overflow:hidden; margin-top:10px;">
+                    <div id="tsunami-wave" style="position:absolute; bottom:0; width:100%; height:20px; background:#0ea5e9; transition: height 2s;"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sec-1-2-4">
+            <h1>1.2.4 地震衰減公式</h1>
+            <p>公式：$$a(M,r) = b \times 10^{cM} \times r^{-d}$$</p>
+            <p>衰減原因包含幾何擴散與地質吸收。</p>
+            <div class="interactive-panel">
+                震級 M: <input type="number" id="eq-m" value="6.0" step="0.1"><br>
+                距離 r: <input type="number" id="eq-r" value="50" step="10"><br>
+                <button onclick="calcAttenuation()">計算加速度 a</button>
+                <h3 id="att-result"></h3>
+            </div>
+            <img src="https://raw.githubusercontent.com/U11110003/seismology_ch1/main/fig1.2-5.png" alt="圖1.2-5">
+        </section>
+
+        <section id="sec-1-2-5">
+            <h1>1.2.5 預報 vs 預測</h1>
+            <p>Forecasting 是長期機率；Prediction 是短期精準預測。</p>
+            <img src="https://raw.githubusercontent.com/U11110003/seismology_ch1/main/fig1.2-14.png" alt="圖1.2-14">
+        </section>
+
+        <section id="sec-1-2-6">
+            <h1>1.2.6 Seismic Gap</h1>
+            <p>長期未發生地震的活躍斷層區段。地震活動常呈 Clustered（群集）。</p>
+            <img src="https://raw.githubusercontent.com/U11110003/seismology_ch1/main/fig1.2-15.png" alt="圖1.2-15">
+            <img src="https://raw.githubusercontent.com/U11110003/seismology_ch1/main/fig1.2-16.png" alt="圖1.2-16">
+        </section>
+
+        <section id="sec-1-2-7">
+            <h1>1.2.7 地震預測方法</h1>
+            <div class="interactive-panel">
+                <select onchange="document.getElementById('pred-desc').innerText = this.value">
+                    <option value="請選擇方法">-- 選擇預測方法 --</option>
+                    <option value="前震：有時大地震前會有微小前震，但並非絕對發生。可靠度低。">前震</option>
+                    <option value="氡氣：地下水氡氣濃度異常。雜訊多，可靠度低。">氡氣</option>
+                    <option value="波速比變化：P波與S波速度比改變。觀測困難。">波速比</option>
+                    <option value="動物行為：缺乏科學定量證據，可靠度極低。">動物行為</option>
+                </select>
+                <p id="pred-desc" style="margin-top:10px; font-weight:bold;"></p>
+            </div>
+        </section>
+
+        <section id="sec-1-2-8">
+            <h1>1.2.8 核試驗監測</h1>
+            <p>核爆特徵：無剪力，P波能量極大。利用 mb / Ms 比例判別。</p>
+            <div class="interactive-panel flex-row">
+                <button onclick="document.getElementById('nuke-info').innerText='地震：表面波(Ms)巨大'">天然地震波形</button>
+                <button onclick="document.getElementById('nuke-info').innerText='核爆：體波(mb/P波)異常巨大，幾乎無表面波'">地下核爆波形</button>
+            </div>
+            <p id="nuke-info" style="font-weight:bold; color:#ef4444;"></p>
+            <img src="https://raw.githubusercontent.com/U11110003/seismology_ch1/main/fig1.2-18.png" alt="圖1.2-18">
+            <img src="https://raw.githubusercontent.com/U11110003/seismology_ch1/main/fig1.2-19.png" alt="圖1.2-19">
+        </section>
+
+        <section id="sec-quiz">
+            <h1>互動問答區</h1>
+            <div id="quiz-container"></div>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

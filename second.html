@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>地震學大師課堂：第一章完整解析</title>
+<style>
+    :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --accent-color: #e74c3c;
+        --bg-color: #f4f6f8;
+        --text-color: #333;
+        --sidebar-bg: #1a252f;
+        --sidebar-hover: #34495e;
+    }
+
+    body { 
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        display: flex; 
+        margin: 0; 
+        background-color: var(--bg-color); 
+        color: var(--text-color); 
+        height: 100vh; 
+        overflow: hidden; 
+    }
+
+    /* 導覽列設計 */
+    .sidebar { 
+        width: 320px; 
+        background-color: var(--sidebar-bg); 
+        color: white; 
+        height: 100%; 
+        overflow-y: auto; 
+        display: flex; 
+        flex-direction: column; 
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+    .sidebar h2 { 
+        padding: 20px; 
+        text-align: center; 
+        background-color: #0f171e; 
+        margin: 0; 
+        font-size: 1.2rem; 
+        letter-spacing: 1px;
+    }
+    .sidebar ul { list-style: none; padding: 0; margin: 0; flex-grow: 1; }
+    .sidebar li { 
+        padding: 15px 20px; 
+        cursor: pointer; 
+        border-bottom: 1px solid #2c3e50; 
+        transition: all 0.3s ease; 
+        font-size: 0.95rem; 
+    }
+    .sidebar li:hover:not(.section-title) { background-color: var(--sidebar-hover); padding-left: 25px; }
+    .sidebar li.active { background-color: var(--sidebar-hover); border-left: 5px solid var(--secondary-color); font-weight: bold; }
+    .sidebar .section-title { 
+        background-color: #11181f; 
+        font-weight: bold; 
+        color: #95a5a6; 
+        cursor: default; 
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* 主內容區設計 */
+    .content-wrapper { 
+        flex-grow: 1; 
+        overflow-y: auto; 
+        padding: 40px; 
+        scroll-behavior: smooth; 
+    }
+    .card { 
+        background: white; 
+        padding: 40px; 
+        border-radius: 12px; 
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
+        margin-bottom: 40px; 
+        display: none; 
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .card.active { display: block; animation: slideUp 0.5s ease; }
+    @keyframes slideUp { 
+        from { opacity: 0; transform: translateY(20px); } 
+        to { opacity: 1; transform: translateY(0); } 
+    }
+
+    h1 { color: var(--primary-color); border-bottom: 3px solid var(--secondary-color); padding-bottom: 10px; margin-top: 0; }
+    h2 { color: #2980b9; margin-top: 30px; border-left: 4px solid var(--accent-color); padding-left: 10px;}
+    p, ul { line-height: 1.8; color: #444; font-size: 1.05rem; }
+    
+    /* 圖片預留區塊 */
+    .image-placeholder {
+        background-color: #eef2f5;
+        border: 2px dashed #bdc3c7;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        margin: 20px 0;
+        color: #7f8c8d;
+        font-weight: bold;
+    }
+
+    /* 引用與解釋區塊 */
+    .citation { 
+        font-family: 'Georgia', serif;
+        color: #555; 
+        border-left: 4px solid #bdc3c7; 
+        padding: 15px 20px; 
+        margin: 20px 0; 
+        background: #f8f9fa; 
+        border-radius: 0 8px 8px 0; 
+        font-size: 0.95rem; 
+        line-height: 1.6;
+    }
+    .explanation { 
+        background: #e1f5fe; 
+        padding: 20px; 
+        border-radius: 8px; 
+        border: 1px solid #b3e5fc; 
+        margin-bottom: 25px; 
+        font-size: 1.05rem;
+        color: #01579b;
+    }
+    
+    /* 測驗區塊 */
+    .quiz-section { background: #fff; padding: 40px; border-radius: 12px; border-top: 5px solid #f39c12; }
+    .question { margin-bottom: 30px; padding: 25px; background: #fdfbf7; border-radius: 8px; border: 1px solid #f8ecc2; }
+    .options label { display: block; padding: 12px 15px; margin: 8px 0; background: white; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .options label:hover { background: #f0f8ff; border-color: var(--secondary-color); }
+    .btn { background: var(--secondary-color); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: background 0.2s; }
+    .btn:hover { background: #2980b9; }
+
+    /* RWD */
+    @media (max-width: 768px) {
+        body { flex-direction: column; }
+        .sidebar { width: 100%; height: auto; max-height: 40vh; }
+        .content-wrapper { padding: 20px; }
+        .card { padding: 20px; }
+    }
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+    <h2>🌍 地震學大師課堂</h2>
+    <ul>
+        <li class="section-title">一、基本概念與觀測模型</li>
+        <li data-target="ch1" class="active">1. 地震學範疇與觀測圖解</li>
+        <li class="section-title">二、地震與社會工程</li>
+        <li data-target="ch2">2. 危害風險與衰減公式</li>
+        <li data-target="ch3">3. 工程危害預估與建築影響</li>
+        <li data-target="ch4">4. 次生災害：土壤液化</li>
+        <li class="section-title">三、預測與監測技術</li>
+        <li data-target="ch5">5. 預報、預測與 Seismic Gap</li>
+        <li data-target="ch6">6. 預測方法與核試爆監測</li>
+        <li class="section-title">知識評量</li>
+        <li data-target="quiz">📝 單元總測驗</li>
+    </ul>
+</nav>
+
+<main class="content-wrapper">
+    
+    <section id="ch1" class="card active">
+        <h1>1. 地震學研究範疇與觀測圖解</h1>
+        
+        <h2>Q1：地震學的研究範疇？</h2>
+        <div class="citation">
+            地震學是研究彈性波（或聲波）在固體地球內傳播的科學。由於人類無法直接觀測地球深處，地震波成為探索地球內部結構（如地殼、地函、液態外核與固態內核）物理與化學性質的最有力工具。此外，地震學也致力於研究地震震源、斷層活動及其力學機制。在社會應用上，地震學被廣泛用於探勘石油與礦產等天然資源、評估地震危害與工程防震設計，以及監測地下核子試爆以驗證國際條約。
+        </div>
+        
+        <h2>Q2：基礎震波觀測圖解 (圖1.1-1 ~ 圖1.1-5)</h2>
+        
+        <p><strong>圖 1.1-1 說明：</strong> 展示地震實驗的幾何示意圖。說明地震波從震源（Source，如地震或爆炸）產生，穿過地球介質（Medium），最後到達接收器（Receiver/地震儀）並記錄為地震圖（Seismogram）的過程。</p>
+        <div class="image-placeholder"></div>
+        
+        <p><strong>圖 1.1-2 說明：</strong> 顯示地震波在地球內部的射線路徑（Ray paths）。由於地球內部的地震波速通常隨深度增加，波的傳播路徑會產生折射（Refraction）而向下彎曲，最終彎向上方回到地表。</p>
+        <div class="image-placeholder"></div>
+        
+        <p><strong>圖 1.1-3 說明：</strong> 展示1967年哥倫比亞地震於科羅拉多州測站記錄到的地震圖及其射線路徑。圖中標示了直接到達的 P波、經地表反射的 pP波與 PP波、S波，以及沿地表傳播的雷利表面波（Rayleigh waves）等震相。</p>
+        <div class="image-placeholder"></div>
+        
+        <p><strong>圖 1.1-4 說明：</strong> 展示東加海溝深源地震於夏威夷測站的地震圖與路徑。圖中特別標示了在核函邊界（地核與地函交界）發生多次反射的震相，例如 ScS、ScS2（反射兩次）、ScS3 等。</p>
+        <div class="image-placeholder"></div>
+        
+        <p><strong>圖 1.1-5 說明：</strong> 震測反射法（Seismic reflection method）的示意圖。這是碳氫化合物（如石油）探勘的基本工具，透過地表的人工震源發出震波，記錄由地底不同岩層界面反射回來的訊號，藉此建構出地底的地質構造影像。</p>
+        <div class="image-placeholder"></div>
+    </section>
+
+    <section id="ch2" class="card">
+        <h1>2. 危害風險區別與衰減公式</h1>
+        
+        <h2>Q3：Seismic hazard 與 Seismic risk 的區別？</h2>
+        <div class="citation">
+            <ul>
+                <li><strong>地震危害 (Hazard)：</strong>指的是地震發生與隨之而來的地表震動等自然現象。這是一個無可避免的地質事實。</li>
+                <li><strong>地震風險 (Risk)：</strong>指的是地震危害對人類生命財產所造成的威脅與損失程度。風險的高低會受到人類行為的影響，例如在危害高的地區，若人口稀少或建築防震極佳，風險可以很低；反之若人口稠密且建築脆弱，風險則極高。</li>
+            </ul>
+        </div>
+
+        <h2>Q4：公式 (1) 說明與能量衰減原因</h2>
+        <div class="explanation">
+            <strong>公式 (1) 為：</strong> $a(M, r) = b \cdot 10^{cM} \cdot r^{-d}$<br><br>
+            此公式描述地表加速度 $a$ 會隨著地震規模 $M$ 增加而變大，並隨著距離 $r$ 增加而衰減。常數 $b, c, d$ 取決於地質條件、震源深度及震動頻率等。
+        </div>
+        <p><strong>能量衰減的原因在於：</strong></p>
+        <ul>
+            <li><strong>幾何擴散：</strong>隨著距離 $r$ 增加，波前擴展導致能量分散（由 $r^{-d}$ 表現）。</li>
+            <li><strong>岩石的地質特性：</strong>震波在不同地質中的傳遞效率不同。例如，美國東部的岩層傳遞震波的能力優於西部岩層，因此在美國東部，地震波衰減得較慢，有感搖晃的範圍會比西部同規模的地震大得多。</li>
+        </ul>
+    </section>
+
+    <section id="ch3" class="card">
+        <h1>3. 工程危害預估與建築影響</h1>
+        
+        <h2>Q5：圖1.2-3、1.2-5、1.2-6 說明</h2>
+        
+        <p><strong>圖 1.2-3 說明：</strong> 美國地震危害預估地圖。以最大預期地表加速度（以重力加速度 g 計算）來表示，呈現出在 50 年內有 2% 機率會遭遇到的強地動分佈。圖中顯示板塊邊界（如美西）及部分內陸斷層（如中西部的新馬德里）具有高危害。</p>
+        <div class="image-placeholder"></div>
+        
+        <p><strong>圖 1.2-5 說明：</strong> 比較美國東部與西部在規模 6 與規模 7 地震下，地動隨距離衰減的曲線。顯示美國東部的震波傳遞效率極佳，其發生規模 6 地震的搖晃程度，幾乎等同於西部發生規模 7 地震的影響範圍。</p>
+        <div class="image-placeholder"></div>
+        
+        <p><strong>圖 1.2-6 說明：</strong> 建築倒塌率與地震震度（Intensity）關係圖。圖中顯示不同建材的抗震能力差異：鋼筋混凝土（特別是具防震設計者）存活率最高，木造框架次之，而無鋼筋的磚造或土坯建築（Adobe）最容易在相對較低的震度下就發生嚴重倒塌。</p>
+        <div class="image-placeholder"></div>
+
+        <h2>Q6：不同建材的抵抗能力與地震波對不同高度建築的影響？</h2>
+        <div class="citation">
+            <ul>
+                <li><strong>建材抵抗能力：</strong>鋼筋混凝土建築在地震中的表現最佳，木構架建築次之；最脆弱的是紅磚或無加強的磚石/土坯建築，在較低強度的搖晃中就容易倒塌。</li>
+                <li><strong>高度與共振影響：</strong>建築物受到地震破壞的程度與其「共振週期（Resonant period）」息息相關。一般而言，建築物越高或基座越寬，共振週期越長（例如單層房屋週期約 0.2 秒，十層大樓約 1 秒）。當地震波的主要能量頻率與建築物的共振週期相吻合時，建築物會產生劇烈的共振搖晃而受到嚴重破壞。例如 1985 年墨西哥城地震中，震波週期約 2 秒，導致高度為 6 到 15 層樓的建築受創最深，而更矮或更高的建築則受損較輕。</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="ch4" class="card">
+        <h1>4. 次生災害：土壤液化</h1>
+        
+        <h2>Q7：土壤液化的原因？</h2>
+        <div class="explanation">
+            土壤液化（Soil liquefaction）主要發生在富含水分的鬆散沙質土壤中。在正常情況下，沙粒之間互相接觸並具備承載力；但在強烈地震搖晃下，沙粒之間的接觸被震開，使整個土層表現得像液體泥漿或流沙一樣。這會導致土壤瞬間失去承載力，使地表建築物在地震中完整地下沉或傾斜。
+        </div>
+    </section>
+
+    <section id="ch5" class="card">
+        <h1>5. 預報、預測與 Seismic Gap</h1>
+        
+        <h2>Q8：圖1.2-14 說明，以及地震預報與預測有何不同？</h2>
+        <p><strong>圖 1.2-14 說明：</strong> 展示了新馬德里（New Madrid）地震帶的地震危害預估圖。它顯示了在使用不同的最大地震規模假設（規模 8 或 7）以及不同的地動預測模型下，預估出的 50 年內 2% 機率最大地表加速度會有顯著的不同。這凸顯了在發生大地震頻率較低的內陸地區，危害評估帶有極大的不確定性。</p>
+        <div class="image-placeholder"></div>
+        
+        <div class="citation">
+            <ul>
+                <li><strong>預報 (Forecasting)：</strong>屬於長期評估。基於彈性反彈理論與歷史地質資料，評估特定斷層在未來一段時間（如數十年內）發生大地震的「機率」。這對於制定建築防震法規非常重要。</li>
+                <li><strong>預測 (Prediction)：</strong>屬於短期評估。試圖在地震發生前數年到數天內，精準給出地震發生的「確切時間、地點與規模」。由於目前尚未找到可靠的地震前兆，精確的短期預測被多數科學家認為是非常困難甚至不可能的。</li>
+            </ul>
+        </div>
+
+        <h2>Q9：甚麼是 Seismic gap？圖1.2-15、1.2-16 說明</h2>
+        <div class="explanation">
+            <strong>Seismic gap (地震空白區)：</strong>指一條活躍的板塊邊界斷層上，長年未發生大地震而尚未破裂的區段。理論上，由於板塊持續運動，這些空白區正在累積應力，因此被認為是未來最有可能發生大地震以「填補」位移的危險區域。
+        </div>
+        
+        <p><strong>圖 1.2-15 說明：</strong> 聖安地列斯斷層 Pallett Creek 地區的古地震時間序列圖。該圖顯示過去大地震的發生並非單純規律的週期性，而是呈現「群集性（Clustered）」。有時幾次大地震會密集發生，然後經歷長達數百年的平靜期，這顯示了利用歷史預報未來地震的複雜性。</p>
+        <div class="image-placeholder"></div>
+        
+        <p><strong>圖 1.2-16 說明：</strong> 展示 1989 年 Loma Prieta 地震前後聖安地列斯斷層的地震活動深度剖面圖。該次地震及其餘震發生的位置，被許多學者解釋為正好填補了之前被識別出來的「Loma Prieta 地震空白區」。</p>
+        <div class="image-placeholder"></div>
+    </section>
+
+    <section id="ch6" class="card">
+        <h1>6. 地震預測方法與核試驗監測</h1>
+        
+        <h2>Q10：地震預測的方法有哪些？</h2>
+        <div class="citation">
+            許多地震預測嘗試尋找地震發生前的「前兆（Precursors）」，這些方法包括：
+            <ol>
+                <li><strong>前震與微震活動：</strong>觀察大地震前是否出現微小地震的異常增加。</li>
+                <li><strong>地下水與氣體變化：</strong>監測地下水中氡氣（Radon）濃度的異常上升（反映微裂隙的產生），或地下水位、間歇泉噴發週期的改變。</li>
+                <li><strong>岩石物理性質改變：</strong>觀測斷層帶岩層中 P波與 S波波速比的變化，或是地表電阻率的下降。</li>
+                <li><strong>地表變形：</strong>利用衛星或應變儀監測地表在震前是否出現異常隆起或傾斜（如著名的 Palmdale Bulge）。</li>
+                <li><strong>動物異常行為：</strong>觀察動物是否在震前表現出無法解釋的異常行為。</li>
+            </ol>
+            儘管有這些方法，但目前尚無任何一種前兆能被證實可以穩定且可靠地在所有大地震發生前出現。
+        </div>
+
+        <h2>Q11：如何用地震學方法監測核子試爆？圖 1.2-18、1.2-19 說明</h2>
+        <div class="explanation">
+            區分核爆與自然地震的關鍵在於波的能量分佈。自然地震是斷層錯動所致，會產生強烈的剪力，因此會輻射出巨大的表面波（Ms）；相對地，地下核爆是一種向外膨脹的壓縮爆炸力，缺乏剪力，因此它產生的 P波（體波 $m_b$）能量會異常龐大，而表面波則相對微小。透過比較體波規模與表面波規模的比例，即可有效揪出核爆。
+        </div>
+
+        <p><strong>圖 1.2-18 說明：</strong> 顯示過去蘇聯進行的地下核子試爆的當量（Yields）估算圖。透過地震儀觀測到的體波規模（$m_b$）反算其 TNT 爆炸當量，證明了蘇聯大致上遵守了 1976 年條約中限制爆炸在 150 千噸以下的規範。</p>
+        <div class="image-placeholder"></div>
+        
+        <p><strong>圖 1.2-19 說明：</strong> 並列顯示了地震與核爆的地震圖對比。在印度的淺層地震圖中，初始的 P波非常微弱，隨後才出現巨大的表面波；但在印度核爆的地震圖中，第一波到達的 P波訊號極為尖銳且振幅最大，這成為監測與識別核爆的最直接證據。</p>
+        <div class="image-placeholder"></div>
+    </section>
+
+    <section id="quiz" class="card quiz-section">
+        <h1>📝 單元總測驗</h1>
+        <p>測試您對本章節核心知識的掌握度！</p>
+        
+        <form id="quiz-form">
+            <div class="question" data-answer="B">
+                <p>1. 關於地震危害 (Hazard) 與風險 (Risk)，下列敘述何者正確？</p>
+                <div class="options">
+                    <label><input type="radio" name="q1" value="A"> A) 地震危害可以透過人類工程完全消除。</label>
+                    <label><input type="radio" name="q1" value="B"> B) 危害是自然現象，風險則受人口密度與建築防震能力影響。</label>
+                    <label><input type="radio" name="q1" value="C"> C) 兩者意義完全相同。</label>
+                    <label><input type="radio" name="q1" value="D"> D) 風險高的地區代表一定會頻繁發生大地震。</label>
+                </div>
+            </div>
+
+            <div class="question" data-answer="D">
+                <p>2. 關於地震預測 (Prediction) 與預報 (Forecasting)，何者為真？</p>
+                <div class="options">
+                    <label><input type="radio" name="q2" value="A"> A) 科學家已能穩定地進行短期的精準預測。</label>
+                    <label><input type="radio" name="q2" value="B"> B) 預測是用來制定長期建築法規的主要依據。</label>
+                    <label><input type="radio" name="q2" value="C"> C) 兩者都能精確給出地震發生的小時與分鐘。</label>
+                    <label><input type="radio" name="q2" value="D"> D) 預報是長期機率評估，而短期的精確預測目前仍極為困難。</label>
+                </div>
+            </div>
+
+            <button type="button" class="btn" onclick="gradeQuiz()">送出評分</button>
+        </form>
+        <div id="quiz-result" style="margin-top:20px; font-weight:bold; font-size:1.1rem; display:none;"></div>
+    </section>
+
+</main>
+
+<script>
+    // 側邊欄切換邏輯
+    const navItems = document.querySelectorAll('.sidebar li[data-target]');
+    const cards = document.querySelectorAll('.card');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            navItems.forEach(nav => nav.classList.remove('active'));
+            cards.forEach(card => card.classList.remove('active'));
+            item.classList.add('active');
+            document.getElementById(item.getAttribute('data-target')).classList.add('active');
+            document.querySelector('.content-wrapper').scrollTo(0, 0);
+        });
+    });
+
+    // 簡易評分邏輯
+    function gradeQuiz() {
+        const questions = document.querySelectorAll('.question');
+        let score = 0;
+        let resultHTML = "";
+
+        const explanations = [
+            "詳解：危害是無可避免的地質事實，而風險是危害對人類生命財產造成的威脅程度，受人為因素影響。",
+            "詳解：預報 (Forecasting) 為長期機率評估，預測 (Prediction) 試圖精準給出短期確切資訊，但目前非常困難。"
+        ];
+
+        questions.forEach((q, index) => {
+            const correctAns = q.getAttribute('data-answer');
+            const selected = q.querySelector(`input[name="q${index+1}"]:checked`);
+            
+            if (selected && selected.value === correctAns) {
+                score++;
+                resultHTML += `<p style="color:green;">✅ 第 ${index+1} 題答對。<br><span style="color:#555;font-weight:normal;font-size:0.9rem;">${explanations[index]}</span></p>`;
+            } else {
+                resultHTML += `<p style="color:red;">❌ 第 ${index+1} 題答錯 (正確答案為 ${correctAns})。<br><span style="color:#555;font-weight:normal;font-size:0.9rem;">${explanations[index]}</span></p>`;
+            }
+        });
+
+        const resDiv = document.getElementById('quiz-result');
+        resDiv.innerHTML = `得分：${score} / 2<br>` + resultHTML;
+        resDiv.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
